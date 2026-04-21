@@ -10,16 +10,21 @@ import androidx.car.app.CarAppService
 import androidx.car.app.Session
 import androidx.car.app.validation.HostValidator
 import androidx.core.app.NotificationCompat
+import com.pscholer.autoplayer.BuildConfig
 import com.pscholer.autoplayer.R
 import com.pscholer.autoplayer.car.AutoMediaSession
 import dagger.hilt.android.AndroidEntryPoint
 
+// R.array.hosts_allowlist is defined in res/values/arrays.xml
+
 /**
  * Entry point for the Android Auto connection.
  *
- * ALLOW_ALL_HOSTS_VALIDATOR is intentional for a sideloaded app — it bypasses
- * the host signature check that restricts un-approved apps on Play Store builds.
- * Never use this for a production Play Store release.
+ * Host validation strategy:
+ *  - DEBUG builds use ALLOW_ALL_HOSTS_VALIDATOR so the app can be sideloaded and tested
+ *    without Play Store signing.
+ *  - RELEASE builds use the standard Google allowlist (Google Play Services, Android
+ *    Automotive OS, Samsung Driving Mode, etc.) required for Play Store distribution.
  */
 @AndroidEntryPoint
 class AutoMediaService : CarAppService() {
@@ -67,7 +72,13 @@ class AutoMediaService : CarAppService() {
     }
 
     override fun createHostValidator(): HostValidator =
-        HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
+        if (BuildConfig.DEBUG) {
+            HostValidator.ALLOW_ALL_HOSTS_VALIDATOR
+        } else {
+            HostValidator.Builder(applicationContext)
+                .addAllowedHosts(R.array.hosts_allowlist)
+                .build()
+        }
 
     override fun onCreateSession(): Session {
         // Promote to foreground here as well: AA binds via bindService() which bypasses

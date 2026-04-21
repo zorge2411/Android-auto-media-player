@@ -1,5 +1,6 @@
 R_DEF: Internal format may change without notice
 local
+array hosts_allowlist
 color black
 color md_background
 color md_error

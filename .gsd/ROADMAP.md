@@ -6,15 +6,15 @@ updated: 2026-04-21
 
 # Roadmap
 
-> **Current Phase:** 2 - Feature Closure
+> **Current Phase:** 3 - Stability & Readiness
 > **Status:** complete
 
 ## Must-Haves (from SPEC)
 
-- [x] Accurate Video Surface Scaling (fix TODO)
-- [x] Working "Play from Favorites" (fix TODO)
+- [x] Accurate Video Surface Scaling
+- [x] Working "Play from Favorites"
 - [x] Stable Media3 Playback for Plex/Jellyfin
-- [ ] Proper Android Auto Host Validation
+- [x] Proper Android Auto Host Validation
 
 ---
 
@@ -26,7 +26,7 @@ updated: 2026-04-21
 **Requirements:** Surface Scaling
 
 **Plans:**
-- [ ] Plan 1.1: Complete transformation logic in `VideoSurfaceRenderer`
+- [x] Plan 1.1: Complete transformation logic in `VideoSurfaceRenderer`
 
 ---
 
@@ -42,13 +42,13 @@ updated: 2026-04-21
 ---
 
 ### Phase 3: Stability & Readiness
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 **Objective:** Prepare the app for real-world usage and potential Play Store distribution.
 **Requirements:** Security, Stability
 
 **Plans:**
-- [ ] Plan 3.1: Implement production-ready `HostValidator`
-- [ ] Plan 3.2: Final performance and UI polish
+- [x] Plan 3.1: Implement production-ready `HostValidator`
+- [x] Plan 3.2: Final performance and UI polish
 
 ---
 
@@ -58,7 +58,7 @@ updated: 2026-04-21
 |-------|--------|-------|----------|
 | 1 | ✅ | 1/1 | 2026-04-21 |
 | 2 | ✅ | 2/2 | 2026-04-21 |
-| 3 | ⬜ | 0/2 | — |
+| 3 | ✅ | 2/2 | 2026-04-21 |
 
 ---
 
@@ -68,4 +68,4 @@ updated: 2026-04-21
 |-------|---------|-----------|----------|
 | 1 | — | 2026-04-21 | — |
 | 2 | — | 2026-04-21 | — |
-| 3 | — | — | — |
+| 3 | 2026-04-21 | 2026-04-21 | — |

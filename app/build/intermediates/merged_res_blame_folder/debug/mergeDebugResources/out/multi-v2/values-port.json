@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.pscholer.autoplayer.app-mergeDebugResources-2:/values-port/values-port.xml",
+            "outputFile": "com.pscholer.autoplayer.app-mergeDebugResources-47:/values-port/values-port.xml",
             "map": [
                 {
-                    "source": "D:\\Android\\prograde-solstice\\gradle\\caches\\8.10.2\\transforms\\3e964b4bfbbd306f65375a4e9e6ddbd0\\transformed\\appcompat-1.7.0\\res\\values-port\\values-port.xml",
+                    "source": "C:\\Users\\peter\\.gradle\\caches\\8.10.2\\transforms\\3e964b4bfbbd306f65375a4e9e6ddbd0\\transformed\\appcompat-1.7.0\\res\\values-port\\values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

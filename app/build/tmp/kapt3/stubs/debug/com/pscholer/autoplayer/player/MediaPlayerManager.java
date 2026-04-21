@@ -18,6 +18,7 @@ import androidx.media3.effect.Presentation;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.ExoTimeoutException;
 import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
@@ -34,7 +35,7 @@ import com.pscholer.autoplayer.data.models.PlaybackState;
  * Singleton ExoPlayer wrapper; Media3 manages audio focus internally via handleAudioFocus.
  */
 @javax.inject.Singleton()
-@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\u00a2\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010$\n\u0002\b\u0012\b\u0007\u0018\u0000 V2\u00020\u0001:\u0004VWXYB\u0019\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u00a2\u0006\u0002\u0010\u0006J\b\u00107\u001a\u000208H\u0002J\u0006\u00109\u001a\u000208J\u000e\u0010:\u001a\u0002082\u0006\u0010;\u001a\u000206J:\u0010<\u001a\u0002082\u0006\u0010=\u001a\u00020>2\b\b\u0002\u0010?\u001a\u00020\u001a2\n\b\u0002\u0010@\u001a\u0004\u0018\u00010\u001a2\b\b\u0002\u0010A\u001a\u00020\u001a2\n\b\u0002\u0010B\u001a\u0004\u0018\u00010\u001aJ*\u0010C\u001a\u0002082\u0006\u0010D\u001a\u00020E2\u0006\u0010?\u001a\u00020\u001a2\b\b\u0002\u0010A\u001a\u00020\u001a2\u0006\u0010B\u001a\u00020\u001aH\u0002JB\u0010F\u001a\u0002082\u0006\u0010=\u001a\u00020>2\u0012\u0010G\u001a\u000e\u0012\u0004\u0012\u00020\u001a\u0012\u0004\u0012\u00020\u001a0H2\b\b\u0002\u0010?\u001a\u00020\u001a2\b\b\u0002\u0010A\u001a\u00020\u001a2\n\b\u0002\u0010B\u001a\u0004\u0018\u00010\u001aJ\u0006\u0010I\u001a\u000208J\u0010\u0010J\u001a\u0002082\b\b\u0002\u0010K\u001a\u00020\u000bJ\u0010\u0010L\u001a\u0002082\b\b\u0002\u0010K\u001a\u00020\u000bJ\u000e\u0010M\u001a\u0002082\u0006\u0010,\u001a\u00020\u000bJ\u0016\u0010N\u001a\u0002082\u0006\u0010O\u001a\u0002012\u0006\u0010P\u001a\u000201J\u000e\u0010Q\u001a\u0002082\u0006\u0010R\u001a\u00020\u0014J\u0018\u0010S\u001a\u0002082\u0006\u0010B\u001a\u00020\u001a2\u0006\u0010A\u001a\u00020\u001aH\u0002J\u0006\u0010T\u001a\u000208J\u0006\u0010U\u001a\u000208R\u0016\u0010\u0007\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\t0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u000b0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\f\u001a\b\u0012\u0004\u0012\u00020\r0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\u000e\u001a\b\u0012\u0004\u0012\u00020\u000f0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\u0010\u001a\b\u0012\u0004\u0012\u00020\u000b0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u0011\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u00120\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u0013\u001a\u0004\u0018\u00010\u0014X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0019\u0010\u0015\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\t0\u0016\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0017\u0010\u0018R\u0010\u0010\u0019\u001a\u0004\u0018\u00010\u001aX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u001b\u001a\u0004\u0018\u00010\u001aX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0017\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0016\u00a2\u0006\b\n\u0000\u001a\u0004\b\u001d\u0010\u0018R\u0017\u0010\u001e\u001a\b\u0012\u0004\u0012\u00020\r0\u0016\u00a2\u0006\b\n\u0000\u001a\u0004\b\u001e\u0010\u0018R\u000e\u0010\u001f\u001a\u00020\u000bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010 \u001a\u00020!X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\"\u001a\u00020#X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010$\u001a\u00020%X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0017\u0010&\u001a\b\u0012\u0004\u0012\u00020\u000f0\u0016\u00a2\u0006\b\n\u0000\u001a\u0004\b\'\u0010\u0018R\u0011\u0010(\u001a\u00020)\u00a2\u0006\b\n\u0000\u001a\u0004\b*\u0010+R\u0017\u0010,\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0016\u00a2\u0006\b\n\u0000\u001a\u0004\b-\u0010\u0018R\u0010\u0010.\u001a\u0004\u0018\u00010/X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u00100\u001a\u000201X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u00102\u001a\u000201X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0019\u00103\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u00120\u0016\u00a2\u0006\b\n\u0000\u001a\u0004\b4\u0010\u0018R\u0010\u00105\u001a\u0004\u0018\u000106X\u0082\u000e\u00a2\u0006\u0002\n\u0000\u00a8\u0006Z"}, d2 = {"Lcom/pscholer/autoplayer/player/MediaPlayerManager;", "", "context", "Landroid/content/Context;", "playbackRepository", "Lcom/pscholer/autoplayer/data/PlaybackRepository;", "(Landroid/content/Context;Lcom/pscholer/autoplayer/data/PlaybackRepository;)V", "_currentItem", "Lkotlinx/coroutines/flow/MutableStateFlow;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$NowPlaying;", "_durationMs", "", "_isPlaying", "", "_playbackState", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState;", "_positionMs", "_videoSize", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$VideoSize;", "activeSurface", "Landroid/view/Surface;", "currentItem", "Lkotlinx/coroutines/flow/StateFlow;", "getCurrentItem", "()Lkotlinx/coroutines/flow/StateFlow;", "currentMediaId", "", "currentSource", "durationMs", "getDurationMs", "isPlaying", "lastSavedPositionMs", "loadControl", "Landroidx/media3/exoplayer/LoadControl;", "managerScope", "Lkotlinx/coroutines/CoroutineScope;", "okHttpClient", "Lokhttp3/OkHttpClient;", "playbackState", "getPlaybackState", "player", "Landroidx/media3/exoplayer/ExoPlayer;", "getPlayer", "()Landroidx/media3/exoplayer/ExoPlayer;", "positionMs", "getPositionMs", "savePositionJob", "Lkotlinx/coroutines/Job;", "surfaceHeight", "", "surfaceWidth", "videoSize", "getVideoSize", "visibleArea", "Landroid/graphics/Rect;", "applyPresentationEffect", "", "clearVideoSurface", "notifyVisibleArea", "area", "play", "uri", "Landroid/net/Uri;", "title", "mimeType", "source", "mediaId", "playMediaItem", "mediaItem", "Landroidx/media3/common/MediaItem;", "playWithHeaders", "headers", "", "release", "seekBack", "ms", "seekForward", "seekTo", "setOutputSize", "width", "height", "setVideoSurface", "surface", "startPeriodicSave", "stop", "togglePlayPause", "Companion", "NowPlaying", "PlaybackState", "VideoSize", "app_debug"})
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\u00b0\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010$\n\u0002\b\u0016\b\u0007\u0018\u0000 ^2\u00020\u0001:\u0006^_`abcB\u0019\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u00a2\u0006\u0002\u0010\u0006J\b\u0010=\u001a\u00020>H\u0002J\u0006\u0010?\u001a\u00020>J\u000e\u0010@\u001a\u00020>2\u0006\u0010A\u001a\u00020<J:\u0010B\u001a\u00020>2\u0006\u0010C\u001a\u00020D2\b\b\u0002\u0010E\u001a\u00020\u001c2\n\b\u0002\u0010F\u001a\u0004\u0018\u00010\u001c2\b\b\u0002\u0010G\u001a\u00020\u001c2\n\b\u0002\u0010H\u001a\u0004\u0018\u00010\u001cJ*\u0010I\u001a\u00020>2\u0006\u0010J\u001a\u00020K2\u0006\u0010E\u001a\u00020\u001c2\b\b\u0002\u0010G\u001a\u00020\u001c2\u0006\u0010H\u001a\u00020\u001cH\u0002JB\u0010L\u001a\u00020>2\u0006\u0010C\u001a\u00020D2\u0012\u0010M\u001a\u000e\u0012\u0004\u0012\u00020\u001c\u0012\u0004\u0012\u00020\u001c0N2\b\b\u0002\u0010E\u001a\u00020\u001c2\b\b\u0002\u0010G\u001a\u00020\u001c2\n\b\u0002\u0010H\u001a\u0004\u0018\u00010\u001cJ\u0006\u0010O\u001a\u00020>J\u0010\u0010P\u001a\u00020>2\b\b\u0002\u0010Q\u001a\u00020\u000bJ\u0010\u0010R\u001a\u00020>2\b\b\u0002\u0010Q\u001a\u00020\u000bJ\u000e\u0010S\u001a\u00020>2\u0006\u00100\u001a\u00020\u000bJ\u0016\u0010T\u001a\u00020>2\u0006\u0010U\u001a\u0002072\u0006\u0010V\u001a\u000207J\u000e\u0010W\u001a\u00020>2\u0006\u0010X\u001a\u00020\u0012J\u000e\u0010Y\u001a\u00020>2\u0006\u0010Z\u001a\u00020\u0016J\u0018\u0010[\u001a\u00020>2\u0006\u0010H\u001a\u00020\u001c2\u0006\u0010G\u001a\u00020\u001cH\u0002J\u0006\u0010\\\u001a\u00020>J\u0006\u0010]\u001a\u00020>R\u0016\u0010\u0007\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\t0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u000b0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\f\u001a\b\u0012\u0004\u0012\u00020\r0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\u000e\u001a\b\u0012\u0004\u0012\u00020\u000f0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\u0010\u001a\b\u0012\u0004\u0012\u00020\u000b0\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0014\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00120\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u0013\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u00140\bX\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0019\u0010\u0017\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\t0\u0018\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0019\u0010\u001aR\u0010\u0010\u001b\u001a\u0004\u0018\u00010\u001cX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u001d\u001a\u0004\u0018\u00010\u001cX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0017\u0010\u001e\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0018\u00a2\u0006\b\n\u0000\u001a\u0004\b\u001f\u0010\u001aR\u0017\u0010 \u001a\b\u0012\u0004\u0012\u00020\r0\u0018\u00a2\u0006\b\n\u0000\u001a\u0004\b \u0010\u001aR\u000e\u0010!\u001a\u00020\u000bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\"\u001a\u00020#X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010$\u001a\u00020%X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010&\u001a\u00020\'X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0010\u0010(\u001a\u0004\u0018\u00010)X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0017\u0010*\u001a\b\u0012\u0004\u0012\u00020\u000f0\u0018\u00a2\u0006\b\n\u0000\u001a\u0004\b+\u0010\u001aR\u0011\u0010,\u001a\u00020-\u00a2\u0006\b\n\u0000\u001a\u0004\b.\u0010/R\u0017\u00100\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0018\u00a2\u0006\b\n\u0000\u001a\u0004\b1\u0010\u001aR\u0010\u00102\u001a\u0004\u0018\u000103X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0017\u00104\u001a\b\u0012\u0004\u0012\u00020\u00120\u0018\u00a2\u0006\b\n\u0000\u001a\u0004\b5\u0010\u001aR\u000e\u00106\u001a\u000207X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u00108\u001a\u000207X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0019\u00109\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u00140\u0018\u00a2\u0006\b\n\u0000\u001a\u0004\b:\u0010\u001aR\u0010\u0010;\u001a\u0004\u0018\u00010<X\u0082\u000e\u00a2\u0006\u0002\n\u0000\u00a8\u0006d"}, d2 = {"Lcom/pscholer/autoplayer/player/MediaPlayerManager;", "", "context", "Landroid/content/Context;", "playbackRepository", "Lcom/pscholer/autoplayer/data/PlaybackRepository;", "(Landroid/content/Context;Lcom/pscholer/autoplayer/data/PlaybackRepository;)V", "_currentItem", "Lkotlinx/coroutines/flow/MutableStateFlow;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$NowPlaying;", "_durationMs", "", "_isPlaying", "", "_playbackState", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState;", "_positionMs", "_scalingMode", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$ScalingMode;", "_videoSize", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$VideoSize;", "activeSurface", "Landroid/view/Surface;", "currentItem", "Lkotlinx/coroutines/flow/StateFlow;", "getCurrentItem", "()Lkotlinx/coroutines/flow/StateFlow;", "currentMediaId", "", "currentSource", "durationMs", "getDurationMs", "isPlaying", "lastSavedPositionMs", "loadControl", "Landroidx/media3/exoplayer/LoadControl;", "managerScope", "Lkotlinx/coroutines/CoroutineScope;", "okHttpClient", "Lokhttp3/OkHttpClient;", "pendingPlay", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay;", "playbackState", "getPlaybackState", "player", "Landroidx/media3/exoplayer/ExoPlayer;", "getPlayer", "()Landroidx/media3/exoplayer/ExoPlayer;", "positionMs", "getPositionMs", "savePositionJob", "Lkotlinx/coroutines/Job;", "scalingMode", "getScalingMode", "surfaceHeight", "", "surfaceWidth", "videoSize", "getVideoSize", "visibleArea", "Landroid/graphics/Rect;", "applyPresentationEffect", "", "clearVideoSurface", "notifyVisibleArea", "area", "play", "uri", "Landroid/net/Uri;", "title", "mimeType", "source", "mediaId", "playMediaItem", "mediaItem", "Landroidx/media3/common/MediaItem;", "playWithHeaders", "headers", "", "release", "seekBack", "ms", "seekForward", "seekTo", "setOutputSize", "width", "height", "setScalingMode", "mode", "setVideoSurface", "surface", "startPeriodicSave", "stop", "togglePlayPause", "Companion", "NowPlaying", "PendingPlay", "PlaybackState", "ScalingMode", "VideoSize", "app_debug"})
 @androidx.annotation.OptIn(markerClass = {androidx.media3.common.util.UnstableApi.class})
 public final class MediaPlayerManager {
     @org.jetbrains.annotations.NotNull()
@@ -83,6 +84,12 @@ public final class MediaPlayerManager {
     private android.view.Surface activeSurface;
     @org.jetbrains.annotations.Nullable()
     private android.graphics.Rect visibleArea;
+    @org.jetbrains.annotations.Nullable()
+    private com.pscholer.autoplayer.player.MediaPlayerManager.PendingPlay pendingPlay;
+    @org.jetbrains.annotations.NotNull()
+    private final kotlinx.coroutines.flow.MutableStateFlow<com.pscholer.autoplayer.player.MediaPlayerManager.ScalingMode> _scalingMode = null;
+    @org.jetbrains.annotations.NotNull()
+    private final kotlinx.coroutines.flow.StateFlow<com.pscholer.autoplayer.player.MediaPlayerManager.ScalingMode> scalingMode = null;
     @org.jetbrains.annotations.NotNull()
     private final androidx.media3.exoplayer.LoadControl loadControl = null;
     @org.jetbrains.annotations.NotNull()
@@ -131,19 +138,56 @@ public final class MediaPlayerManager {
     }
     
     @org.jetbrains.annotations.NotNull()
+    public final kotlinx.coroutines.flow.StateFlow<com.pscholer.autoplayer.player.MediaPlayerManager.ScalingMode> getScalingMode() {
+        return null;
+    }
+    
+    @org.jetbrains.annotations.NotNull()
     public final androidx.media3.exoplayer.ExoPlayer getPlayer() {
         return null;
     }
     
     /**
-     * Attach the car display Surface to ExoPlayer's video pipeline.
+     * Store the car display Surface and attach it to ExoPlayer, then flush any deferred prepare.
+     *
+     * INVARIANT enforced by play()/playMediaItem()/playWithHeaders():
+     * If activeSurface is null when play() is called, prepare() is NOT called immediately.
+     * Instead the MediaItem/MediaSource is stored in [pendingPlay] and this method executes
+     * it here — after surface attachment — so the video renderer ALWAYS starts with a real
+     * android.view.Surface. This prevents:
+     * 1. FinalShaderWrapper "Output surface and size not set" dropping every frame (which
+     *    happened when prepare() ran before the surface arrived).
+     * 2. ExoTimeoutException in setVideoSurface() (which happened when onSurfaceAvailable
+     *    called setVideoSurface() against an already-BUFFERING renderer).
+     *
+     * When activeSurface IS non-null at play-time, prepare() runs immediately after
+     * setVideoSurface() in the play path — the player is in IDLE at that point so there is
+     * no active renderer to race against, and the surface detach completes instantly.
      */
     public final void setVideoSurface(@org.jetbrains.annotations.NotNull()
     android.view.Surface surface) {
     }
     
     /**
-     * Detach the surface (called before the Surface is released).
+     * Called from VideoSurfaceRenderer.onSurfaceDestroyed — the car host is about to
+     * destroy the surface, so we must stop rendering immediately.
+     *
+     * WHY we do NOT call player.clearVideoSurface() here:
+     * clearVideoSurface() is a BLOCKING call — it sends a synchronous message to
+     * ExoPlayer's playback thread and awaits a reply within a fixed timeout.
+     * player.stop() is fire-and-forget (posts to the playback thread, returns at once).
+     * Because stop() returns before the playback thread processes it, calling
+     * clearVideoSurface() right after still races against an active renderer → timeout:
+     *  ExoTimeoutException: Detaching surface timed out.
+     *
+     * The correct approach for Android Auto:
+     * - Call player.stop() — ExoPlayer transitions to IDLE asynchronously; all rendering
+     *   ceases. The playback thread will discover the surface is gone on its own.
+     * - Null activeSurface so no future play() accidentally re-attaches a dead surface.
+     * - The car host destroys the actual Surface AFTER this callback returns, so there
+     *   is no window where ExoPlayer could write to an already-freed buffer.
+     * - When onSurfaceAvailable fires for a new session, setVideoSurface(newSurface) +
+     *   prepare() rebuild the pipeline from scratch.
      */
     public final void clearVideoSurface() {
     }
@@ -155,25 +199,16 @@ public final class MediaPlayerManager {
     android.graphics.Rect area) {
     }
     
-    /**
-     * Sizes the output frame to [width] x [height] with letterbox/pillarbox bars so the source
-     * aspect ratio is preserved. Needed because CarAppService provides a raw Surface; the normal
-     * videoScalingMode knob is a no-op without a SurfaceHolder.
-     *
-     * Called from VideoSurfaceRenderer.onSurfaceAvailable() and onVisibleAreaChanged().
-     * The Car App surface persists for the lifetime of the session, so this fires once on
-     * session start and again only if the display geometry changes. We store the dimensions
-     * here so that each play() call can unconditionally re-apply Presentation effects before
-     * prepare() — even when onSurfaceAvailable does not re-fire between plays.
-     */
     public final void setOutputSize(int width, int height) {
     }
     
     /**
-     * Apply (or re-apply) the Presentation effect to ExoPlayer's video pipeline.
-     * Must be called before every prepare() so the new pipeline has valid output dimensions.
-     * Safe to call multiple times — ExoPlayer replaces the effect list each time.
+     * Set the scaling mode. Soft-restarts the player if playback is active.
      */
+    public final void setScalingMode(@org.jetbrains.annotations.NotNull()
+    com.pscholer.autoplayer.player.MediaPlayerManager.ScalingMode mode) {
+    }
+    
     private final void applyPresentationEffect() {
     }
     
@@ -292,6 +327,100 @@ public final class MediaPlayerManager {
         }
     }
     
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b2\u0018\u00002\u00020\u0001:\u0002\u0003\u0004B\u0007\b\u0004\u00a2\u0006\u0002\u0010\u0002\u0082\u0001\u0002\u0005\u0006\u00a8\u0006\u0007"}, d2 = {"Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay;", "", "()V", "Item", "Source", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay$Item;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay$Source;", "app_debug"})
+    static abstract class PendingPlay {
+        
+        private PendingPlay() {
+            super();
+        }
+        
+        @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000*\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\u0086\b\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004J\t\u0010\u0007\u001a\u00020\u0003H\u00c6\u0003J\u0013\u0010\b\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u0003H\u00c6\u0001J\u0013\u0010\t\u001a\u00020\n2\b\u0010\u000b\u001a\u0004\u0018\u00010\fH\u00d6\u0003J\t\u0010\r\u001a\u00020\u000eH\u00d6\u0001J\t\u0010\u000f\u001a\u00020\u0010H\u00d6\u0001R\u0011\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006\u00a8\u0006\u0011"}, d2 = {"Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay$Item;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay;", "item", "Landroidx/media3/common/MediaItem;", "(Landroidx/media3/common/MediaItem;)V", "getItem", "()Landroidx/media3/common/MediaItem;", "component1", "copy", "equals", "", "other", "", "hashCode", "", "toString", "", "app_debug"})
+        public static final class Item extends com.pscholer.autoplayer.player.MediaPlayerManager.PendingPlay {
+            @org.jetbrains.annotations.NotNull()
+            private final androidx.media3.common.MediaItem item = null;
+            
+            public Item(@org.jetbrains.annotations.NotNull()
+            androidx.media3.common.MediaItem item) {
+            }
+            
+            @org.jetbrains.annotations.NotNull()
+            public final androidx.media3.common.MediaItem getItem() {
+                return null;
+            }
+            
+            @org.jetbrains.annotations.NotNull()
+            public final androidx.media3.common.MediaItem component1() {
+                return null;
+            }
+            
+            @org.jetbrains.annotations.NotNull()
+            public final com.pscholer.autoplayer.player.MediaPlayerManager.PendingPlay.Item copy(@org.jetbrains.annotations.NotNull()
+            androidx.media3.common.MediaItem item) {
+                return null;
+            }
+            
+            @java.lang.Override()
+            public boolean equals(@org.jetbrains.annotations.Nullable()
+            java.lang.Object other) {
+                return false;
+            }
+            
+            @java.lang.Override()
+            public int hashCode() {
+                return 0;
+            }
+            
+            @java.lang.Override()
+            @org.jetbrains.annotations.NotNull()
+            public java.lang.String toString() {
+                return null;
+            }
+        }
+        
+        @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000*\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\u0086\b\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004J\t\u0010\u0007\u001a\u00020\u0003H\u00c6\u0003J\u0013\u0010\b\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u0003H\u00c6\u0001J\u0013\u0010\t\u001a\u00020\n2\b\u0010\u000b\u001a\u0004\u0018\u00010\fH\u00d6\u0003J\t\u0010\r\u001a\u00020\u000eH\u00d6\u0001J\t\u0010\u000f\u001a\u00020\u0010H\u00d6\u0001R\u0011\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006\u00a8\u0006\u0011"}, d2 = {"Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay$Source;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PendingPlay;", "source", "Landroidx/media3/exoplayer/source/MediaSource;", "(Landroidx/media3/exoplayer/source/MediaSource;)V", "getSource", "()Landroidx/media3/exoplayer/source/MediaSource;", "component1", "copy", "equals", "", "other", "", "hashCode", "", "toString", "", "app_debug"})
+        public static final class Source extends com.pscholer.autoplayer.player.MediaPlayerManager.PendingPlay {
+            @org.jetbrains.annotations.NotNull()
+            private final androidx.media3.exoplayer.source.MediaSource source = null;
+            
+            public Source(@org.jetbrains.annotations.NotNull()
+            androidx.media3.exoplayer.source.MediaSource source) {
+            }
+            
+            @org.jetbrains.annotations.NotNull()
+            public final androidx.media3.exoplayer.source.MediaSource getSource() {
+                return null;
+            }
+            
+            @org.jetbrains.annotations.NotNull()
+            public final androidx.media3.exoplayer.source.MediaSource component1() {
+                return null;
+            }
+            
+            @org.jetbrains.annotations.NotNull()
+            public final com.pscholer.autoplayer.player.MediaPlayerManager.PendingPlay.Source copy(@org.jetbrains.annotations.NotNull()
+            androidx.media3.exoplayer.source.MediaSource source) {
+                return null;
+            }
+            
+            @java.lang.Override()
+            public boolean equals(@org.jetbrains.annotations.Nullable()
+            java.lang.Object other) {
+                return false;
+            }
+            
+            @java.lang.Override()
+            public int hashCode() {
+                return 0;
+            }
+            
+            @java.lang.Override()
+            @org.jetbrains.annotations.NotNull()
+            public java.lang.String toString() {
+                return null;
+            }
+        }
+    }
+    
     @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\"\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b6\u0018\u00002\u00020\u0001:\u0005\u0003\u0004\u0005\u0006\u0007B\u0007\b\u0004\u00a2\u0006\u0002\u0010\u0002\u0082\u0001\u0005\b\t\n\u000b\f\u00a8\u0006\r"}, d2 = {"Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState;", "", "()V", "Buffering", "Ended", "Error", "Idle", "Ready", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState$Buffering;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState$Ended;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState$Error;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState$Idle;", "Lcom/pscholer/autoplayer/player/MediaPlayerManager$PlaybackState$Ready;", "app_debug"})
     public static abstract class PlaybackState {
         
@@ -385,6 +514,21 @@ public final class MediaPlayerManager {
             
             private Ready() {
             }
+        }
+    }
+    
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0010\n\u0002\b\u0005\b\u0086\u0081\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00000\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002j\u0002\b\u0003j\u0002\b\u0004j\u0002\b\u0005\u00a8\u0006\u0006"}, d2 = {"Lcom/pscholer/autoplayer/player/MediaPlayerManager$ScalingMode;", "", "(Ljava/lang/String;I)V", "FIT", "FILL", "STRETCH", "app_debug"})
+    public static enum ScalingMode {
+        /*public static final*/ FIT /* = new FIT() */,
+        /*public static final*/ FILL /* = new FILL() */,
+        /*public static final*/ STRETCH /* = new STRETCH() */;
+        
+        ScalingMode() {
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public static kotlin.enums.EnumEntries<com.pscholer.autoplayer.player.MediaPlayerManager.ScalingMode> getEntries() {
+            return null;
         }
     }
     

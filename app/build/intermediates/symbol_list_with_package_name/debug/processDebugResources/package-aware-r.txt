@@ -78,6 +78,7 @@ animator mtrl_fab_show_motion_spec
 animator mtrl_fab_transformation_sheet_collapse_spec
 animator mtrl_fab_transformation_sheet_expand_spec
 array exo_controls_playback_speeds
+array hosts_allowlist
 array hosts_allowlist_sample
 attr actionBarDivider
 attr actionBarItemBackground

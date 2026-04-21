@@ -2,6 +2,8 @@ package com.pscholer.autoplayer.car.screens
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
+import android.content.pm.PackageManager
 import androidx.annotation.OptIn
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
@@ -10,8 +12,12 @@ import androidx.car.app.model.Action
 import androidx.car.app.model.CarIcon
 import androidx.car.app.model.GridItem
 import androidx.car.app.model.GridTemplate
+import androidx.car.app.model.Header
 import androidx.car.app.model.ItemList
+import androidx.car.app.model.MessageTemplate
+import androidx.car.app.model.ParkedOnlyOnClickListener
 import androidx.car.app.model.Template
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.lifecycleScope
 import coil.imageLoader
@@ -38,12 +44,16 @@ import kotlinx.coroutines.withContext
  *             → BrowseScreen(parentId=X)    [sub-folders / seasons]
  *             → VideoPlaybackScreen          [leaf video item]
  *
- * Thumbnail loading:
- *  We pre-fetch all thumbnails with Coil on a background thread, then call
- *  invalidate() to re-render the template with actual artwork. Android Auto
- *  does NOT support async image loading inside template builders — you must
- *  have the Bitmap ready before building the GridItem.
- */
+     * Thumbnail loading:
+     *  We pre-fetch all thumbnails with Coil on a background thread, then call
+     *  invalidate() to re-render the template with actual artwork. Android Auto
+     *  does NOT support async image loading inside template builders — you must
+     *  have the Bitmap ready before building the GridItem.
+     *
+     *  Size is capped at 256x256 px to stay well under the ~1 MB Binder IPC limit
+     *  (a 512x512 ARGB_8888 bitmap is exactly 1 MB and causes "Large outgoing
+     *  transaction" warnings or crashes on some head units).
+     */
 class BrowseScreen(
     carContext: CarContext,
     private val source: MediaSource,
@@ -53,6 +63,7 @@ class BrowseScreen(
     private var items: List<MediaItem> = emptyList()
     private val thumbnails = ConcurrentHashMap<String, Bitmap>()
     private var isLoading = true
+    private var needsPermission = false
     private var errorMessage: String? = null
 
     private val repo: MediaRepository by lazy {
@@ -63,6 +74,30 @@ class BrowseScreen(
     }
 
     init {
+        checkPermissionsAndLoad()
+    }
+
+    private fun checkPermissionsAndLoad() {
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            android.Manifest.permission.READ_MEDIA_VIDEO
+        } else {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        if (source == MediaSource.LOCAL && ContextCompat.checkSelfPermission(carContext, permission) != PackageManager.PERMISSION_GRANTED) {
+            needsPermission = true
+            isLoading = false
+            invalidate()
+        } else {
+            loadMedia()
+        }
+    }
+
+    private fun loadMedia() {
+        isLoading = true
+        needsPermission = false
+        invalidate()
+        
         lifecycleScope.launch {
             try {
                 items = repo.getItems(source, parentId)
@@ -78,10 +113,46 @@ class BrowseScreen(
 
     @OptIn(ExperimentalCarApi::class)
     override fun onGetTemplate(): Template {
+        val header = Header.Builder()
+            .setTitle(
+                if (isLoading) {
+                    parentId?.let { "Loading…" } ?: source.displayName
+                } else if (needsPermission) {
+                    "Permissions Required"
+                } else {
+                    parentId?.let { items.firstOrNull()?.subtitle ?: "Browse" } ?: source.displayName
+                }
+            )
+            .setStartHeaderAction(Action.BACK)
+            .build()
+
+        if (needsPermission) {
+            val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                android.Manifest.permission.READ_MEDIA_VIDEO
+            } else {
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            }
+            
+            return MessageTemplate.Builder("Please grant storage permissions on your phone to view local videos.")
+                .setHeader(header)
+                .addAction(
+                    Action.Builder()
+                        .setTitle("Grant Permissions")
+                        .setOnClickListener(ParkedOnlyOnClickListener.create {
+                            carContext.requestPermissions(listOf(permission)) { granted, _ ->
+                                if (granted.contains(permission)) {
+                                    loadMedia()
+                                }
+                            }
+                        })
+                        .build()
+                )
+                .build()
+        }
+
         if (isLoading) {
             return GridTemplate.Builder()
-                .setTitle(parentId?.let { "Loading…" } ?: source.displayName)
-                .setHeaderAction(Action.BACK)
+                .setHeader(header)
                 .setLoading(true)
                 .build()
         }
@@ -95,8 +166,7 @@ class BrowseScreen(
         }
 
         return GridTemplate.Builder()
-            .setTitle(parentId?.let { items.firstOrNull()?.subtitle ?: "Browse" } ?: source.displayName)
-            .setHeaderAction(Action.BACK)
+            .setHeader(header)
             .setItemSize(GridTemplate.ITEM_SIZE_LARGE)
             .setSingleList(listBuilder.build())
             .build()
@@ -137,7 +207,7 @@ class BrowseScreen(
                     try {
                         val request = ImageRequest.Builder(carContext)
                             .data(item.thumbnailUrl)
-                            .size(512, 512)
+                            .size(256, 256)
                             .allowHardware(false)
                             .build()
                         val bitmap = (loader.execute(request) as? SuccessResult)

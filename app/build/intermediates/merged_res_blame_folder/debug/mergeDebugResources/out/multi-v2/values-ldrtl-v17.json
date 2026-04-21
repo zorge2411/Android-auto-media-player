@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.pscholer.autoplayer.app-mergeDebugResources-2:/values-ldrtl-v17/values-ldrtl-v17.xml",
+            "outputFile": "com.pscholer.autoplayer.app-mergeDebugResources-47:/values-ldrtl-v17/values-ldrtl-v17.xml",
             "map": [
                 {
-                    "source": "D:\\Android\\prograde-solstice\\gradle\\caches\\8.10.2\\transforms\\9f03a2d5d740e3e0bd34326c3ceac37e\\transformed\\material-1.12.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
+                    "source": "C:\\Users\\peter\\.gradle\\caches\\8.10.2\\transforms\\9f03a2d5d740e3e0bd34326c3ceac37e\\transformed\\material-1.12.0\\res\\values-ldrtl-v17\\values-ldrtl-v17.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

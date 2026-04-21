@@ -4,10 +4,10 @@ import android.content.Intent
 import androidx.car.app.CarContext
 import androidx.car.app.Screen
 import androidx.car.app.model.Action
-import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.CarIcon
 import androidx.car.app.model.GridItem
 import androidx.car.app.model.GridTemplate
+import androidx.car.app.model.Header
 import androidx.car.app.model.ItemList
 import androidx.car.app.model.Template
 import androidx.core.graphics.drawable.IconCompat
@@ -78,10 +78,14 @@ class RootScreen(carContext: CarContext) : Screen(carContext) {
             }
             .build()
 
-        return GridTemplate.Builder()
+        val header = Header.Builder()
             .setTitle("Auto Player")
-            .setHeaderAction(Action.APP_ICON)
-            .setActionStrip(ActionStrip.Builder().addAction(settingsAction).build())
+            .setStartHeaderAction(Action.APP_ICON)
+            .addEndHeaderAction(settingsAction)
+            .build()
+
+        return GridTemplate.Builder()
+            .setHeader(header)
             .setSingleList(items)
             .build()
     }

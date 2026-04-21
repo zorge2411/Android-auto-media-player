@@ -56,8 +56,12 @@ class VideoSurfaceRenderer(
         activeSurface = surface
         surfaceWidth = surfaceContainer.width
         surfaceHeight = surfaceContainer.height
-        playerManager.setVideoSurface(surface)
+        // Set dimensions FIRST so that the deferred prepare inside setVideoSurface() picks up
+        // the correct (fresh) surface dimensions when it calls applyPresentationEffect().
+        // Previously setOutputSize was called AFTER setVideoSurface, which meant the deferred
+        // prepare used stale dims from the previous session.
         playerManager.setOutputSize(surfaceWidth, surfaceHeight)
+        playerManager.setVideoSurface(surface)
         _state.value = SurfaceState.Available(
             surface = surface,
             width = surfaceContainer.width,

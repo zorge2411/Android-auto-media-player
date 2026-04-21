@@ -62,25 +62,25 @@
 38-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:29:9-37
 39
 40    <queries>
-40-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:23:5-28:15
+40-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:23:5-28:15
 41        <provider
-41-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:24:9-27:43
+41-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:24:9-27:43
 42            android:name="androidx.car.app.connection.provider"
-42-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:25:13-64
+42-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:25:13-64
 43            android:authorities="androidx.car.app.connection" />
-43-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:26:13-62
+43-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:26:13-62
 44    </queries>
 45
 46    <permission
-46-->[androidx.core:core:1.15.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:22:5-24:47
+46-->[androidx.core:core:1.15.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:22:5-24:47
 47        android:name="com.pscholer.autoplayer.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-47-->[androidx.core:core:1.15.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:23:9-81
+47-->[androidx.core:core:1.15.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:23:9-81
 48        android:protectionLevel="signature" />
-48-->[androidx.core:core:1.15.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:24:9-44
+48-->[androidx.core:core:1.15.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:24:9-44
 49
 50    <uses-permission android:name="com.pscholer.autoplayer.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-50-->[androidx.core:core:1.15.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:26:5-97
-50-->[androidx.core:core:1.15.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:26:22-94
+50-->[androidx.core:core:1.15.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:26:5-97
+50-->[androidx.core:core:1.15.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:26:22-94
 51
 52    <application
 52-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:32:5-88:19
@@ -89,7 +89,7 @@
 54        android:allowBackup="true"
 54-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:34:9-35
 55        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-55-->[androidx.core:core:1.15.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:28:18-86
+55-->[androidx.core:core:1.15.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\AndroidManifest.xml:28:18-86
 56        android:debuggable="true"
 57        android:extractNativeLibs="false"
 58        android:icon="@mipmap/ic_launcher"
@@ -102,181 +102,180 @@
 61-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:37:9-54
 62        android:supportsRtl="true"
 62-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:38:9-35
-63        android:testOnly="true"
-64        android:theme="@style/Theme.AutoPlayer" >
-64-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:39:9-48
-65
-66        <!-- Phone-side configuration UI (launcher entry point) -->
-67        <activity
-67-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:43:9-51:20
-68            android:name="com.pscholer.autoplayer.SettingsActivity"
-68-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:44:13-45
-69            android:exported="true"
-69-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:45:13-36
-70            android:label="Auto Player" >
-70-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:46:13-40
-71            <intent-filter>
-71-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:47:13-50:29
-72                <action android:name="android.intent.action.MAIN" />
-72-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:48:17-69
-72-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:48:25-66
-73
-74                <category android:name="android.intent.category.LAUNCHER" />
-74-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:49:17-77
-74-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:49:27-74
-75            </intent-filter>
-76        </activity>
-77
-78        <!--
-79            CarAppService — the Android Auto entry point.
-80
-81            Category NAVIGATION is used (not MEDIA) because:
-82            1. Navigation apps receive full-screen SurfaceContainer access.
-83            2. MEDIA apps are sandboxed into the AA media browser UI.
-84            3. Fermata Auto and similar sideloaded video players use this trick.
-85
-86            For a Play Store build you would need to switch to MEDIA and accept
-87            the standard media-browser restrictions.
-88        -->
-89        <service
-89-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:64:9-72:19
-90            android:name="com.pscholer.autoplayer.service.AutoMediaService"
-90-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:65:13-53
-91            android:exported="true"
-91-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:66:13-36
-92            android:foregroundServiceType="mediaPlayback" >
-92-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:67:13-58
-93            <intent-filter>
-93-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:68:13-71:29
-94                <action android:name="androidx.car.app.CarAppService" />
-94-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:69:17-73
-94-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:69:25-70
-95
-96                <category android:name="androidx.car.app.category.NAVIGATION" />
-96-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:70:17-81
-96-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:70:27-78
-97            </intent-filter>
-98        </service>
-99
-100        <!-- Tells the AA host which car features this app uses -->
-101        <meta-data
-101-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:75:9-77:59
-102            android:name="com.google.android.gms.car.application"
-102-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:76:13-66
-103            android:resource="@xml/automotive_app_desc" />
-103-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:77:13-56
-104
-105        <!--
-106            Minimum Car App API level.
-107            Level 2 introduced SurfaceCallback / SurfaceContainer.
-108            Required for video surface access.
-109        -->
-110        <meta-data
-110-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:84:9-86:33
-111            android:name="androidx.car.app.minCarApiLevel"
-111-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:85:13-59
-112            android:value="2" />
-112-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:86:13-30
-113
-114        <service
-114-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:24:9-34:19
-115            android:name="androidx.car.app.CarAppMetadataHolderService"
-115-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:25:13-72
-116            android:enabled="false"
-116-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:26:13-36
-117            android:exported="false"
-117-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:27:13-37
-118            android:process="" >
-118-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:28:13-31
-119            <meta-data
-119-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:31:13-33:89
-120                android:name="androidx.car.app.CarAppMetadataHolderService.CAR_HARDWARE_MANAGER"
-120-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:32:17-97
-121                android:value="androidx.car.app.hardware.ProjectedCarHardwareManager" />
-121-->[androidx.car.app:app-projected:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:33:17-86
-122        </service>
-123
-124        <activity
-124-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:31:9-34:75
-125            android:name="androidx.car.app.CarAppPermissionActivity"
-125-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:32:13-69
-126            android:exported="false"
-126-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:33:13-37
-127            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-127-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:34:13-72
-128
-129        <receiver
-129-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:36:9-38:40
-130            android:name="androidx.car.app.notification.CarAppNotificationBroadcastReceiver"
-130-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:37:13-93
-131            android:exported="false" />
-131-->[androidx.car.app:app:1.7.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:38:13-37
-132
-133        <provider
-133-->[androidx.emoji2:emoji2:1.3.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
-134            android:name="androidx.startup.InitializationProvider"
-134-->[androidx.emoji2:emoji2:1.3.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
-135            android:authorities="com.pscholer.autoplayer.debug.androidx-startup"
-135-->[androidx.emoji2:emoji2:1.3.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
-136            android:exported="false" >
-136-->[androidx.emoji2:emoji2:1.3.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
-137            <meta-data
-137-->[androidx.emoji2:emoji2:1.3.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
-138                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-138-->[androidx.emoji2:emoji2:1.3.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
-139                android:value="androidx.startup" />
-139-->[androidx.emoji2:emoji2:1.3.0] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
-140            <meta-data
-140-->[androidx.lifecycle:lifecycle-process:2.8.7] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c9a22ed20aa195aceaad6786aef69539\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
-141                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-141-->[androidx.lifecycle:lifecycle-process:2.8.7] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c9a22ed20aa195aceaad6786aef69539\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
-142                android:value="androidx.startup" />
-142-->[androidx.lifecycle:lifecycle-process:2.8.7] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c9a22ed20aa195aceaad6786aef69539\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
-143            <meta-data
-143-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
-144                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-144-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
-145                android:value="androidx.startup" />
-145-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
-146        </provider>
-147
-148        <receiver
-148-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
-149            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-149-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
-150            android:directBootAware="false"
-150-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
-151            android:enabled="true"
-151-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
-152            android:exported="true"
-152-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
-153            android:permission="android.permission.DUMP" >
-153-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
-154            <intent-filter>
-154-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
-155                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-155-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-155-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
-156            </intent-filter>
-157            <intent-filter>
-157-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
-158                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-158-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-158-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
-159            </intent-filter>
-160            <intent-filter>
-160-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
-161                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-161-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-161-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
-162            </intent-filter>
-163            <intent-filter>
-163-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
-164                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-164-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-164-->[androidx.profileinstaller:profileinstaller:1.3.1] D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
-165            </intent-filter>
-166        </receiver>
-167    </application>
-168
-169</manifest>
+63        android:theme="@style/Theme.AutoPlayer" >
+63-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:39:9-48
+64
+65        <!-- Phone-side configuration UI (launcher entry point) -->
+66        <activity
+66-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:43:9-51:20
+67            android:name="com.pscholer.autoplayer.SettingsActivity"
+67-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:44:13-45
+68            android:exported="true"
+68-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:45:13-36
+69            android:label="Auto Player" >
+69-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:46:13-40
+70            <intent-filter>
+70-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:47:13-50:29
+71                <action android:name="android.intent.action.MAIN" />
+71-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:48:17-69
+71-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:48:25-66
+72
+73                <category android:name="android.intent.category.LAUNCHER" />
+73-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:49:17-77
+73-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:49:27-74
+74            </intent-filter>
+75        </activity>
+76
+77        <!--
+78            CarAppService — the Android Auto entry point.
+79
+80            Category NAVIGATION is used (not MEDIA) because:
+81            1. Navigation apps receive full-screen SurfaceContainer access.
+82            2. MEDIA apps are sandboxed into the AA media browser UI.
+83            3. Fermata Auto and similar sideloaded video players use this trick.
+84
+85            For a Play Store build you would need to switch to MEDIA and accept
+86            the standard media-browser restrictions.
+87        -->
+88        <service
+88-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:64:9-72:19
+89            android:name="com.pscholer.autoplayer.service.AutoMediaService"
+89-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:65:13-53
+90            android:exported="true"
+90-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:66:13-36
+91            android:foregroundServiceType="mediaPlayback" >
+91-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:67:13-58
+92            <intent-filter>
+92-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:68:13-71:29
+93                <action android:name="androidx.car.app.CarAppService" />
+93-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:69:17-73
+93-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:69:25-70
+94
+95                <category android:name="androidx.car.app.category.NAVIGATION" />
+95-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:70:17-81
+95-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:70:27-78
+96            </intent-filter>
+97        </service>
+98
+99        <!-- Tells the AA host which car features this app uses -->
+100        <meta-data
+100-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:75:9-77:59
+101            android:name="com.google.android.gms.car.application"
+101-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:76:13-66
+102            android:resource="@xml/automotive_app_desc" />
+102-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:77:13-56
+103
+104        <!--
+105            Minimum Car App API level.
+106            Level 2 introduced SurfaceCallback / SurfaceContainer.
+107            Required for video surface access.
+108        -->
+109        <meta-data
+109-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:84:9-86:33
+110            android:name="androidx.car.app.minCarApiLevel"
+110-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:85:13-59
+111            android:value="2" />
+111-->C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\AndroidManifest.xml:86:13-30
+112
+113        <service
+113-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:24:9-34:19
+114            android:name="androidx.car.app.CarAppMetadataHolderService"
+114-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:25:13-72
+115            android:enabled="false"
+115-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:26:13-36
+116            android:exported="false"
+116-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:27:13-37
+117            android:process="" >
+117-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:28:13-31
+118            <meta-data
+118-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:31:13-33:89
+119                android:name="androidx.car.app.CarAppMetadataHolderService.CAR_HARDWARE_MANAGER"
+119-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:32:17-97
+120                android:value="androidx.car.app.hardware.ProjectedCarHardwareManager" />
+120-->[androidx.car.app:app-projected:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\AndroidManifest.xml:33:17-86
+121        </service>
+122
+123        <activity
+123-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:31:9-34:75
+124            android:name="androidx.car.app.CarAppPermissionActivity"
+124-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:32:13-69
+125            android:exported="false"
+125-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:33:13-37
+126            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+126-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:34:13-72
+127
+128        <receiver
+128-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:36:9-38:40
+129            android:name="androidx.car.app.notification.CarAppNotificationBroadcastReceiver"
+129-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:37:13-93
+130            android:exported="false" />
+130-->[androidx.car.app:app:1.7.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\AndroidManifest.xml:38:13-37
+131
+132        <provider
+132-->[androidx.emoji2:emoji2:1.3.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+133            android:name="androidx.startup.InitializationProvider"
+133-->[androidx.emoji2:emoji2:1.3.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+134            android:authorities="com.pscholer.autoplayer.debug.androidx-startup"
+134-->[androidx.emoji2:emoji2:1.3.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+135            android:exported="false" >
+135-->[androidx.emoji2:emoji2:1.3.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+136            <meta-data
+136-->[androidx.emoji2:emoji2:1.3.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+137                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+137-->[androidx.emoji2:emoji2:1.3.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+138                android:value="androidx.startup" />
+138-->[androidx.emoji2:emoji2:1.3.0] C:\Users\peter\.gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+139            <meta-data
+139-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\peter\.gradle\caches\8.10.2\transforms\c9a22ed20aa195aceaad6786aef69539\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
+140                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+140-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\peter\.gradle\caches\8.10.2\transforms\c9a22ed20aa195aceaad6786aef69539\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
+141                android:value="androidx.startup" />
+141-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\peter\.gradle\caches\8.10.2\transforms\c9a22ed20aa195aceaad6786aef69539\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
+142            <meta-data
+142-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+143                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+143-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+144                android:value="androidx.startup" />
+144-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+145        </provider>
+146
+147        <receiver
+147-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+148            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+148-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+149            android:directBootAware="false"
+149-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+150            android:enabled="true"
+150-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+151            android:exported="true"
+151-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+152            android:permission="android.permission.DUMP" >
+152-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+153            <intent-filter>
+153-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+154                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+154-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+154-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+155            </intent-filter>
+156            <intent-filter>
+156-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+157                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+157-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+157-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+158            </intent-filter>
+159            <intent-filter>
+159-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+160                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+160-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+160-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+161            </intent-filter>
+162            <intent-filter>
+162-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+163                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+163-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+163-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\peter\.gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+164            </intent-filter>
+165        </receiver>
+166    </application>
+167
+168</manifest>
