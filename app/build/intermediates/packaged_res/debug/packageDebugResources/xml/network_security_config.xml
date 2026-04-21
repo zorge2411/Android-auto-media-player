@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sideloaded private app — cleartext HTTP is permitted so users can reach
+    Plex / Jellyfin on local network IPs (192.168.x.x, 10.x.x.x, etc.).
+    Public domain servers should still be configured with https:// in the
+    settings UI; getSanitizedUrl() defaults to https:// for domain names.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

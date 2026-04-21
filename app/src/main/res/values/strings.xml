@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Auto Player</string>
+    <string name="settings_title">Server Settings</string>
+
+    <!-- Section titles + descriptions -->
+    <string name="plex_section">Plex</string>
+    <string name="plex_subtitle">Stream from your Plex media server</string>
+    <string name="jellyfin_section">Jellyfin</string>
+    <string name="jellyfin_subtitle">Stream from your Jellyfin media server</string>
+    <string name="local_folders">Local Folders</string>
+    <string name="local_folders_subtitle">Add folders from device storage to browse in the car</string>
+
+    <!-- Field hints -->
+    <string name="plex_server_url_hint">Server URL (e.g. http://192.168.1.10:32400)</string>
+    <string name="plex_token_hint">Auth token</string>
+    <string name="plex_token_helper">Find your token in Plex Web → Settings → Account</string>
+    <string name="jellyfin_server_url_hint">Server URL (e.g. http://192.168.1.10:8096)</string>
+    <string name="jellyfin_username_hint">Username</string>
+    <string name="jellyfin_password_hint">Password</string>
+
+    <!-- Buttons -->
+    <string name="save">Save</string>
+    <string name="checking">Checking…</string>
+    <string name="add_folder">Add folder</string>
+    <string name="remove">Remove</string>
+
+    <!-- Status messages (persistent, in-line under sections) -->
+    <string name="saved">Settings saved</string>
+    <string name="status_not_configured">Not configured</string>
+    <string name="status_configured">Configured</string>
+    <string name="status_connected">Connected as %1$s</string>
+    <string name="status_no_folders">No folders added yet</string>
+    <string name="status_folders_count">%1$d folder added</string>
+    <string name="status_folders_count_plural">%1$d folders added</string>
+
+    <!-- Error messages -->
+    <string name="error_url_required">Server URL required</string>
+    <string name="error_token_required">Auth token required</string>
+    <string name="error_username_required">Username required</string>
+    <string name="error_password_required">Password required</string>
+
+    <!-- Permission dialog -->
+    <string name="permission_title">Allow access to videos</string>
+    <string name="permission_message">Auto Player needs access to your videos to show local files in the car. You can also add specific folders below without granting full access.</string>
+    <string name="permission_grant">Allow</string>
+    <string name="permission_skip">Not now</string>
+    <string name="permission_denied">Permission denied — only added folders will be visible</string>
+
+    <!-- Misc -->
+    <string name="folder_added">Folder added</string>
+    <string name="folder_removed">Folder removed</string>
+    <string name="confirm_remove_folder_title">Remove folder?</string>
+    <string name="confirm_remove_folder_message">Videos in this folder will no longer appear in the car.</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_media">No media found</string>
+</resources>

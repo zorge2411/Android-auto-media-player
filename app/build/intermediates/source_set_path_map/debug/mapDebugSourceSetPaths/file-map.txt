@@ -1,0 +1,52 @@
+com.pscholer.autoplayer.app-pngs-0 C:\Users\peter\AndroidStudioProjects\Android auto media player\app\build\generated\res\pngs\debug
+com.pscholer.autoplayer.app-resValues-1 C:\Users\peter\AndroidStudioProjects\Android auto media player\app\build\generated\res\resValues\debug
+com.pscholer.autoplayer.app-packageDebugResources-2 C:\Users\peter\AndroidStudioProjects\Android auto media player\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.pscholer.autoplayer.app-packageDebugResources-3 C:\Users\peter\AndroidStudioProjects\Android auto media player\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.pscholer.autoplayer.app-debug-4 C:\Users\peter\AndroidStudioProjects\Android auto media player\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.pscholer.autoplayer.app-debug-5 C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\debug\res
+com.pscholer.autoplayer.app-main-6 C:\Users\peter\AndroidStudioProjects\Android auto media player\app\src\main\res
+com.pscholer.autoplayer.app-core-runtime-2.2.0-7 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\01c2c4b1ded4854d1ce307de29d186b3\transformed\core-runtime-2.2.0\res
+com.pscholer.autoplayer.app-lifecycle-livedata-2.8.7-8 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\0b111ea28192a3427eda5128a040a281\transformed\lifecycle-livedata-2.8.7\res
+com.pscholer.autoplayer.app-appcompat-resources-1.7.0-9 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\0c663c372363deddb34da4ea1380727d\transformed\appcompat-resources-1.7.0\res
+com.pscholer.autoplayer.app-lifecycle-livedata-core-ktx-2.8.7-10 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\1166e3d371815f7ba534fdfbad75ebab\transformed\lifecycle-livedata-core-ktx-2.8.7\res
+com.pscholer.autoplayer.app-lifecycle-livedata-core-2.8.7-11 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\13ac6c80bdd0bd9b8833db287532a58e\transformed\lifecycle-livedata-core-2.8.7\res
+com.pscholer.autoplayer.app-lifecycle-runtime-release-12 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\1faaa942deeea6efc82a8e6e1bceda2f\transformed\lifecycle-runtime-release\res
+com.pscholer.autoplayer.app-viewpager2-1.1.0-beta02-13 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\20ba163b091fe571ce03ccbdf591b1ba\transformed\viewpager2-1.1.0-beta02\res
+com.pscholer.autoplayer.app-media3-ui-1.5.1-14 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\27feea9c27a64fe858962aed0c340e0f\transformed\media3-ui-1.5.1\res
+com.pscholer.autoplayer.app-lifecycle-runtime-ktx-release-15 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\2a5ea19deffa612ee6a28172b36c11e2\transformed\lifecycle-runtime-ktx-release\res
+com.pscholer.autoplayer.app-lifecycle-viewmodel-release-16 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\30bcfba1328691c8ecb8b5dbc957c0b9\transformed\lifecycle-viewmodel-release\res
+com.pscholer.autoplayer.app-core-ktx-1.15.0-17 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\32e2a3fc90e44bb0dd89aca5e2abe46a\transformed\core-ktx-1.15.0\res
+com.pscholer.autoplayer.app-appcompat-1.7.0-18 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\3e964b4bfbbd306f65375a4e9e6ddbd0\transformed\appcompat-1.7.0\res
+com.pscholer.autoplayer.app-app-projected-1.7.0-19 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\406b98b363b4d6df9e31b9a486f12fdc\transformed\app-projected-1.7.0\res
+com.pscholer.autoplayer.app-emoji2-1.3.0-20 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4704fb7d3423bee725c9cf6f7f557874\transformed\emoji2-1.3.0\res
+com.pscholer.autoplayer.app-datastore-preferences-release-21 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\4dde2da577405d88de8bcdee0a8aeed0\transformed\datastore-preferences-release\res
+com.pscholer.autoplayer.app-drawerlayout-1.1.1-22 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\51201a4eda157663e80fb0a95fd097d2\transformed\drawerlayout-1.1.1\res
+com.pscholer.autoplayer.app-lifecycle-viewmodel-savedstate-2.8.7-23 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\52518b747b0f11e9b74aed0afc9fe653\transformed\lifecycle-viewmodel-savedstate-2.8.7\res
+com.pscholer.autoplayer.app-recyclerview-1.3.2-24 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5507d9932ebc857e9f8a885bdd159933\transformed\recyclerview-1.3.2\res
+com.pscholer.autoplayer.app-core-1.15.0-25 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5a4c00fa90cf785cbf743ae185dadeca\transformed\core-1.15.0\res
+com.pscholer.autoplayer.app-media-1.7.0-26 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\5de19e768ea65325322671e23ea68832\transformed\media-1.7.0\res
+com.pscholer.autoplayer.app-fragment-ktx-1.8.5-27 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\625f235871db16aca7ea6471952ab08f\transformed\fragment-ktx-1.8.5\res
+com.pscholer.autoplayer.app-tracing-1.2.0-28 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\64d469f379b54453200bf3fa7b5dd3c2\transformed\tracing-1.2.0\res
+com.pscholer.autoplayer.app-constraintlayout-2.0.1-29 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\6bd5893e09c3e4badc44b524a03e71ea\transformed\constraintlayout-2.0.1\res
+com.pscholer.autoplayer.app-startup-runtime-1.1.1-30 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\6ca9cd2f435e7310fc204e0e52202477\transformed\startup-runtime-1.1.1\res
+com.pscholer.autoplayer.app-coordinatorlayout-1.1.0-31 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\7a30aaf88e45a0a4f444e01a8f43c374\transformed\coordinatorlayout-1.1.0\res
+com.pscholer.autoplayer.app-lifecycle-viewmodel-ktx-2.8.7-32 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\8ced6183f23d935bd5c204161dc662bc\transformed\lifecycle-viewmodel-ktx-2.8.7\res
+com.pscholer.autoplayer.app-annotation-experimental-1.4.1-33 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\900591d8357bd2161d9c54cbc546f962\transformed\annotation-experimental-1.4.1\res
+com.pscholer.autoplayer.app-material-1.12.0-34 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\9f03a2d5d740e3e0bd34326c3ceac37e\transformed\material-1.12.0\res
+com.pscholer.autoplayer.app-customview-poolingcontainer-1.0.0-35 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\a3e855f9d3cade361739adca85cf3436\transformed\customview-poolingcontainer-1.0.0\res
+com.pscholer.autoplayer.app-fragment-1.8.5-36 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\a6722833320d14e9c0c9738c64a5f355\transformed\fragment-1.8.5\res
+com.pscholer.autoplayer.app-emoji2-views-helper-1.3.0-37 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\a8805c3e25ca244241fbdfb40ef3eec9\transformed\emoji2-views-helper-1.3.0\res
+com.pscholer.autoplayer.app-transition-1.5.0-38 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\aee096dbeac783e0811df8db1bb363ad\transformed\transition-1.5.0\res
+com.pscholer.autoplayer.app-savedstate-1.2.1-39 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\be98f83b97cd89c305e9f89a3d4dd6c3\transformed\savedstate-1.2.1\res
+com.pscholer.autoplayer.app-app-1.7.0-40 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c30a5cdddaf4b5198f1655b11020934a\transformed\app-1.7.0\res
+com.pscholer.autoplayer.app-lifecycle-process-2.8.7-41 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\c9a22ed20aa195aceaad6786aef69539\transformed\lifecycle-process-2.8.7\res
+com.pscholer.autoplayer.app-savedstate-ktx-1.2.1-42 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\cb313799d77a0cf51315e34048e28ab2\transformed\savedstate-ktx-1.2.1\res
+com.pscholer.autoplayer.app-cardview-1.0.0-43 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\ccea169238af6b3d7549499092269a54\transformed\cardview-1.0.0\res
+com.pscholer.autoplayer.app-activity-1.9.3-44 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\d1e99241e829fb98f9baf1da9fe679f5\transformed\activity-1.9.3\res
+com.pscholer.autoplayer.app-media3-exoplayer-1.5.1-45 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\d99e47b24b9ef2b35b17613af438d219\transformed\media3-exoplayer-1.5.1\res
+com.pscholer.autoplayer.app-media3-session-1.5.1-46 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\e1d9650079ea8322567a1b78fe2acd3a\transformed\media3-session-1.5.1\res
+com.pscholer.autoplayer.app-profileinstaller-1.3.1-47 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\f154b7d4126117b75ba1b594daee48d7\transformed\profileinstaller-1.3.1\res
+com.pscholer.autoplayer.app-coil-base-2.6.0-48 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\fda19f623b43f1734e488fad0bd6aa62\transformed\coil-base-2.6.0\res
+com.pscholer.autoplayer.app-activity-ktx-1.9.3-49 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\fe29e9b82091aaf9569c55cc5081e881\transformed\activity-ktx-1.9.3\res
+com.pscholer.autoplayer.app-datastore-core-release-50 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\fe9ff884fc1002de42480a8257c03d1d\transformed\datastore-core-release\res
+com.pscholer.autoplayer.app-datastore-release-51 D:\Android\prograde-solstice\gradle\caches\8.10.2\transforms\fef45e196894f238d964b2040fb701d0\transformed\datastore-release\res

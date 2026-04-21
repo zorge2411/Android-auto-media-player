@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "projectName": "Android Auto Media Player",
+  "workflowMode": "standard",
+  "preferences": {
+    "researchPhases": true,
+    "parallelExecution": true,
+    "atomicCommits": true,
+    "verificationMode": "uatDriven"
+  },
+  "phases": {
+    "executionModel": "sequential",
+    "allowDayJumps": false,
+    "breakpoints": [3, 5]
+  },
+  "outputFormat": "markdown",
+  "platformConstraints": {
+    "minSdk": 29,
+    "targetSdk": 35,
+    "category": "NAVIGATION",
+    "sideloaded": true
+  },
+  "testing": {
+    "minCoveragePerPhase": 1,
+    "requiresRealDevice": true,
+    "deviceTarget": "Android Auto Head Unit or Emulator"
+  },
+  "notifications": {
+    "checkpointsOnly": true,
+    "phaseCompleteNotify": true
+  }
+}

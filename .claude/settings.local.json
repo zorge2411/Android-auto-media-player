@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew compileDebugKotlin)",
+      "Bash(cmd.exe /c \"cd \\\\\"C:\\\\Users\\\\peter\\\\AndroidStudioProjects\\\\Android auto media player\\\\\" && gradlew.bat compileDebugKotlin 2>&1\")",
+      "Bash(cmd.exe /c \"cd \\\\\"C:\\\\Users\\\\peter\\\\AndroidStudioProjects\\\\Android auto media player\\\\\" && gradlew.bat compileDebugKotlin\")",
+      "WebSearch"
+    ]
+  }
+}
