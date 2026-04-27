@@ -69,6 +69,14 @@ class VideoPlaybackScreen(
     private var isFavorite = false
 
     init {
+        // Back-navigation contract (Phase 4 — D-02, D-03):
+        // The Car App Library's screen lifecycle fires onStop() when this screen is
+        // popped (hardware back, Action.BACK, or screenManager.pop() from elsewhere).
+        // We hook onStop to call playerManager.stop() — this satisfies FEAT-2-AC1
+        // (back from video stops playback and returns to Browse) without an explicit
+        // OnBackPressedCallback override. Do NOT call screenManager.pop() inside
+        // onStop — that causes re-entrant double-pop / stack corruption (RESEARCH
+        // Pitfall 2).
         lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStop(owner: LifecycleOwner) {
                 playerManager.stop()
@@ -191,6 +199,11 @@ class VideoPlaybackScreen(
                     }
                     .build()
             )
+            // Stop button (Phase 4 — D-07, D-08): explicit stop-and-exit. Pops ONE
+            // level (back to BrowseScreen, not RootScreen) so the user returns to the
+            // browse context they came from. screenManager.pop() here triggers onStop
+            // which already calls playerManager.stop() — the explicit stop() call in
+            // the click listener is redundant-but-defensive (intentional belt+braces).
             .addAction(
                 Action.Builder()
                     .setIcon(
