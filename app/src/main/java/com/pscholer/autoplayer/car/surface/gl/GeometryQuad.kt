@@ -18,14 +18,13 @@ import java.nio.FloatBuffer
  *
  * Usage:
  *   1. allocate()  — fills native FloatBuffers (call once on GL thread)
- *   2. bindPositions(loc) / bindTexCoords(loc) — called per-frame by OesTextureProgram.draw()
+ *   2. draw(aPositionLoc, aTexCoordLoc) — bind + draw + disable per-frame call
  *   3. No release() needed — FloatBuffers are Java heap; GC collects them.
  */
 class GeometryQuad {
     companion object {
         private const val COORDS_PER_POSITION = 2
         private const val COORDS_PER_TEXCOORD = 2
-        private const val VERTEX_COUNT = 4
         private const val BYTES_PER_FLOAT = 4
     }
 
@@ -50,24 +49,28 @@ class GeometryQuad {
         )
     }
 
-    fun bindPositions(attribLocation: Int) {
-        val buf = checkNotNull(positionBuffer) { "allocate() not called" }
-        buf.position(0)
-        GLES20.glEnableVertexAttribArray(attribLocation)
-        GLES20.glVertexAttribPointer(
-            attribLocation, COORDS_PER_POSITION, GLES20.GL_FLOAT, false,
-            COORDS_PER_POSITION * BYTES_PER_FLOAT, buf
-        )
-    }
+    fun draw(aPositionLoc: Int, aTexCoordLoc: Int) {
+        val pos = checkNotNull(positionBuffer) { "allocate() not called" }
+        val tex = checkNotNull(texCoordBuffer) { "allocate() not called" }
 
-    fun bindTexCoords(attribLocation: Int) {
-        val buf = checkNotNull(texCoordBuffer) { "allocate() not called" }
-        buf.position(0)
-        GLES20.glEnableVertexAttribArray(attribLocation)
+        pos.position(0)
+        GLES20.glEnableVertexAttribArray(aPositionLoc)
         GLES20.glVertexAttribPointer(
-            attribLocation, COORDS_PER_TEXCOORD, GLES20.GL_FLOAT, false,
-            COORDS_PER_TEXCOORD * BYTES_PER_FLOAT, buf
+            aPositionLoc, COORDS_PER_POSITION, GLES20.GL_FLOAT, false,
+            COORDS_PER_POSITION * BYTES_PER_FLOAT, pos
         )
+
+        tex.position(0)
+        GLES20.glEnableVertexAttribArray(aTexCoordLoc)
+        GLES20.glVertexAttribPointer(
+            aTexCoordLoc, COORDS_PER_TEXCOORD, GLES20.GL_FLOAT, false,
+            COORDS_PER_TEXCOORD * BYTES_PER_FLOAT, tex
+        )
+
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+
+        GLES20.glDisableVertexAttribArray(aPositionLoc)
+        GLES20.glDisableVertexAttribArray(aTexCoordLoc)
     }
 
     private fun floatBufferOf(vararg values: Float): FloatBuffer =

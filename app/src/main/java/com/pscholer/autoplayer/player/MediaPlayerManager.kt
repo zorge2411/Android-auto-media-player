@@ -24,6 +24,7 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import okhttp3.OkHttpClient
 import dagger.hilt.android.qualifiers.ApplicationContext
 import com.pscholer.autoplayer.data.PlaybackRepository
+import com.pscholer.autoplayer.util.AspectRatioCalculator
 import com.pscholer.autoplayer.data.models.PlaybackState as PlaybackStateModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -106,8 +107,8 @@ class MediaPlayerManager @Inject constructor(
     private var pendingPlay: PendingPlay? = null
     private var pendingSurface: Surface? = null
 
-    private val _scalingMode = MutableStateFlow(ScalingMode.FIT)
-    val scalingMode: StateFlow<ScalingMode> = _scalingMode.asStateFlow()
+    private val _scalingMode = MutableStateFlow(AspectRatioCalculator.ScalingMode.FIT)
+    val scalingMode: StateFlow<AspectRatioCalculator.ScalingMode> = _scalingMode.asStateFlow()
 
     private sealed class PendingPlay {
         data class Item(val item: androidx.media3.common.MediaItem) : PendingPlay()
@@ -328,8 +329,6 @@ class MediaPlayerManager @Inject constructor(
     private var surfaceWidth = 0
     private var surfaceHeight = 0
 
-    enum class ScalingMode { FIT, FILL, STRETCH }
-
     fun setOutputSize(width: Int, height: Int) {
         if (width <= 0 || height <= 0) return
         val oldWidth = surfaceWidth
@@ -343,10 +342,10 @@ class MediaPlayerManager @Inject constructor(
         )
     }
 
-    fun setScalingMode(mode: ScalingMode) {
+    fun setScalingMode(mode: AspectRatioCalculator.ScalingMode) {
         if (_scalingMode.value == mode) return
         _scalingMode.value = mode
-        Log.i(TAG, "Scaling mode set to $mode (no-op until Wave 3 GLVideoPipeline wires it)")
+        Log.i(TAG, "Scaling mode set to $mode (delegated to GLVideoPipeline via VideoSurfaceRenderer)")
     }
 
     // ─────────────────────────────────────────────────────────────────────────

@@ -6,31 +6,32 @@ import android.util.Log
 /**
  * GLES2 program that draws an OES external texture (SurfaceTexture) onto the full viewport.
  *
- * Vertex shader: receives aPosition (NDC quad corners) and aTexCoord, multiplies by uMVPMatrix
- * to apply aspect-ratio + rotation transform, passes vTexCoord to fragment stage.
+ * Owns the OES texture name so GLVideoPipeline can pass it directly to SurfaceTexture().
  *
- * Fragment shader: samples samplerExternalOES using the OES_EGL_image_external extension —
- * required for SurfaceTexture-backed textures produced by ExoPlayer.
+ * Vertex shader: applies uMVPMatrix (aspect + rotation) and uTexMatrix (SurfaceTexture transform)
+ * Fragment shader: samples samplerExternalOES — required for SurfaceTexture-backed textures.
  *
  * Usage:
- *   1. init()       — compile shaders, link program, cache attribute/uniform locations
- *   2. draw(mvp)    — bind program, upload matrix, draw quad via glDrawArrays
- *   3. release()    — delete program (not the texture — caller owns it)
+ *   1. init()       — compile shaders, link program, gen OES texture, cache locations
+ *   2. (set uniforms via public location fields, then call quad.draw)
+ *   3. release()    — delete program + texture
  *
  * Source: Phase 3 RESEARCH.md Pattern 6.
  */
 class OesTextureProgram {
     companion object {
         private const val TAG = "OesTextureProgram"
+        const val GL_TEXTURE_EXTERNAL_OES = 0x8D65
 
         private const val VERTEX_SHADER = """
             uniform mat4 uMVPMatrix;
+            uniform mat4 uTexMatrix;
             attribute vec4 aPosition;
             attribute vec2 aTexCoord;
             varying vec2 vTexCoord;
             void main() {
                 gl_Position = uMVPMatrix * aPosition;
-                vTexCoord = aTexCoord;
+                vTexCoord = (uTexMatrix * vec4(aTexCoord, 0.0, 1.0)).xy;
             }
         """
 
@@ -45,68 +46,70 @@ class OesTextureProgram {
         """
     }
 
-    private var program = 0
-    private var aPosition = -1
-    private var aTexCoord = -1
-    private var uMVPMatrix = -1
-    private var uTexture = -1
+    var programId = 0
+        private set
+    var oesTextureId = 0
+        private set
+    var aPositionLoc = -1
+        private set
+    var aTextureCoordLoc = -1
+        private set
+    var uMvpMatrixLoc = -1
+        private set
+    var uTexMatrixLoc = -1
+        private set
+    var uTextureLoc = -1
+        private set
 
     fun init() {
-        check(program == 0) { "init() called twice" }
+        check(programId == 0) { "init() called twice" }
+
         val vs = compileShader(GLES20.GL_VERTEX_SHADER, VERTEX_SHADER)
         val fs = compileShader(GLES20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER)
-        program = GLES20.glCreateProgram()
-        check(program != 0) { "glCreateProgram failed" }
-        GLES20.glAttachShader(program, vs)
-        GLES20.glAttachShader(program, fs)
-        GLES20.glLinkProgram(program)
+        programId = GLES20.glCreateProgram()
+        check(programId != 0) { "glCreateProgram failed" }
+        GLES20.glAttachShader(programId, vs)
+        GLES20.glAttachShader(programId, fs)
+        GLES20.glLinkProgram(programId)
         val status = IntArray(1)
-        GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, status, 0)
+        GLES20.glGetProgramiv(programId, GLES20.GL_LINK_STATUS, status, 0)
         check(status[0] == GLES20.GL_TRUE) {
-            val log = GLES20.glGetProgramInfoLog(program)
-            GLES20.glDeleteProgram(program); program = 0
+            val log = GLES20.glGetProgramInfoLog(programId)
+            GLES20.glDeleteProgram(programId); programId = 0
             "glLinkProgram failed: $log"
         }
         GLES20.glDeleteShader(vs)
         GLES20.glDeleteShader(fs)
 
-        aPosition  = GLES20.glGetAttribLocation(program, "aPosition")
-        aTexCoord  = GLES20.glGetAttribLocation(program, "aTexCoord")
-        uMVPMatrix = GLES20.glGetUniformLocation(program, "uMVPMatrix")
-        uTexture   = GLES20.glGetUniformLocation(program, "uTexture")
-        Log.i(TAG, "Program linked (aPos=$aPosition aTC=$aTexCoord uMVP=$uMVPMatrix uTex=$uTexture)")
-    }
+        aPositionLoc     = GLES20.glGetAttribLocation(programId, "aPosition")
+        aTextureCoordLoc = GLES20.glGetAttribLocation(programId, "aTexCoord")
+        uMvpMatrixLoc    = GLES20.glGetUniformLocation(programId, "uMVPMatrix")
+        uTexMatrixLoc    = GLES20.glGetUniformLocation(programId, "uTexMatrix")
+        uTextureLoc      = GLES20.glGetUniformLocation(programId, "uTexture")
 
-    /**
-     * Draw the quad. Caller must have already called makeCurrent() and bound the OES texture.
-     *
-     * @param mvpMatrix 16-float column-major MVP matrix (from AspectRatioCalculator.computeVertexTransform)
-     * @param quad      GeometryQuad providing vertex + texcoord buffers
-     * @param textureId OES texture name produced by SurfaceTexture
-     */
-    fun draw(mvpMatrix: FloatArray, quad: GeometryQuad, textureId: Int) {
-        GLES20.glUseProgram(program)
+        val texIds = IntArray(1)
+        GLES20.glGenTextures(1, texIds, 0)
+        oesTextureId = texIds[0]
+        GLES20.glBindTexture(GL_TEXTURE_EXTERNAL_OES, oesTextureId)
+        GLES20.glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
+        GLES20.glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
+        GLES20.glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE)
+        GLES20.glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
+        GLES20.glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0)
 
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(0x8D65 /* GL_TEXTURE_EXTERNAL_OES */, textureId)
-        GLES20.glUniform1i(uTexture, 0)
-
-        GLES20.glUniformMatrix4fv(uMVPMatrix, 1, false, mvpMatrix, 0)
-
-        quad.bindPositions(aPosition)
-        quad.bindTexCoords(aTexCoord)
-
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
-
-        GLES20.glDisableVertexAttribArray(aPosition)
-        GLES20.glDisableVertexAttribArray(aTexCoord)
+        Log.i(TAG, "Program linked oesTexId=$oesTextureId " +
+            "(aPos=$aPositionLoc aTC=$aTextureCoordLoc uMVP=$uMvpMatrixLoc uTex=$uTexMatrixLoc)")
     }
 
     fun release() {
-        if (program != 0) {
-            GLES20.glDeleteProgram(program)
-            program = 0
-            Log.d(TAG, "Program deleted")
+        if (oesTextureId != 0) {
+            GLES20.glDeleteTextures(1, intArrayOf(oesTextureId), 0)
+            oesTextureId = 0
+        }
+        if (programId != 0) {
+            GLES20.glDeleteProgram(programId)
+            programId = 0
+            Log.d(TAG, "Program + texture deleted")
         }
     }
 

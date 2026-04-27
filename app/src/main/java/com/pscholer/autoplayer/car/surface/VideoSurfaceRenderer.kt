@@ -1,11 +1,14 @@
 package com.pscholer.autoplayer.car.surface
 
 import android.graphics.Rect
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
+import com.pscholer.autoplayer.car.surface.gl.GLVideoPipeline
 import com.pscholer.autoplayer.player.MediaPlayerManager
 import com.pscholer.autoplayer.util.AspectRatioCalculator
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +27,12 @@ class VideoSurfaceRenderer(
 
     companion object {
         private const val TAG = "VideoSurfaceRenderer"
+        private const val VISIBLE_AREA_ATTACH_TIMEOUT_MS = 150L
+    }
+
+    private fun describeSurface(surface: Surface?): String {
+        if (surface == null) return "null"
+        return "Surface@${System.identityHashCode(surface).toString(16)}(valid=${surface.isValid})"
     }
 
     // ── Exposed state (screens can observe to adapt their UI) ─────────────────
@@ -31,9 +40,45 @@ class VideoSurfaceRenderer(
     val state: StateFlow<SurfaceState> = _state.asStateFlow()
 
     private var activeSurface: Surface? = null
+    private var pendingAttachSurface: Surface? = null
+    private var rawSurfaceWidth = 0
+    private var rawSurfaceHeight = 0
     private var surfaceWidth = 0
     private var surfaceHeight = 0
     private var lastVideoSize: MediaPlayerManager.VideoSize? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val glPipeline = GLVideoPipeline()
+    private var pendingAttachFallback: Runnable? = null
+
+    private fun cancelPendingAttachFallback() {
+        pendingAttachFallback?.let(mainHandler::removeCallbacks)
+        pendingAttachFallback = null
+    }
+
+    private fun attachPendingSurface(reason: String, width: Int, height: Int) {
+        val surface = pendingAttachSurface ?: return
+        if (width <= 0 || height <= 0) {
+            Log.w(TAG, "attachPendingSurface($reason) skipped due to invalid size ${width}x${height}")
+            return
+        }
+
+        cancelPendingAttachFallback()
+        pendingAttachSurface = null
+        surfaceWidth = width
+        surfaceHeight = height
+
+        Log.d(
+            TAG,
+            "Attaching pending surface from $reason using ${width}x${height}, " +
+                "surface=${describeSurface(surface)}"
+        )
+        playerManager.setOutputSize(width, height)
+        glPipeline.attach(surface, width, height) { intermediateSurface ->
+            // Hand the SurfaceTexture-backed intermediate Surface to ExoPlayer (NOT the Car App Surface)
+            mainHandler.post { playerManager.setVideoSurface(intermediateSurface) }
+        }
+        lastVideoSize?.let { glPipeline.setVideoSize(it) }
+    }
 
     // ─────────────────────────────────────────────────────────────────────────
     //  SurfaceCallback implementation
@@ -51,17 +96,31 @@ class VideoSurfaceRenderer(
         }
 
         Log.i(TAG, "Surface available — ${surfaceContainer.width}x${surfaceContainer.height} " +
-                "@ ${surfaceContainer.dpi} dpi")
+                "@ ${surfaceContainer.dpi} dpi, surface=${describeSurface(surface)}")
 
         activeSurface = surface
-        surfaceWidth = surfaceContainer.width
-        surfaceHeight = surfaceContainer.height
-        // Set dimensions FIRST so that the deferred prepare inside setVideoSurface() picks up
-        // the correct (fresh) surface dimensions when it calls applyPresentationEffect().
-        // Previously setOutputSize was called AFTER setVideoSurface, which meant the deferred
-        // prepare used stale dims from the previous session.
-        playerManager.setOutputSize(surfaceWidth, surfaceHeight)
-        playerManager.setVideoSurface(surface)
+        pendingAttachSurface = surface
+        rawSurfaceWidth = surfaceContainer.width
+        rawSurfaceHeight = surfaceContainer.height
+        surfaceWidth = 0
+        surfaceHeight = 0
+
+        // Android Auto often delivers the full raw surface first and the actual visible area a
+        // few milliseconds later. Treat the visible area as authoritative when possible so the
+        // initial Presentation effect is created with the real renderable size.
+        cancelPendingAttachFallback()
+        pendingAttachFallback = Runnable {
+            if (pendingAttachSurface === surface) {
+                Log.w(
+                    TAG,
+                    "Visible area did not arrive within ${VISIBLE_AREA_ATTACH_TIMEOUT_MS}ms — " +
+                        "falling back to raw surface size ${rawSurfaceWidth}x${rawSurfaceHeight}"
+                )
+                attachPendingSurface("surface-timeout", rawSurfaceWidth, rawSurfaceHeight)
+            }
+        }
+        mainHandler.postDelayed(pendingAttachFallback!!, VISIBLE_AREA_ATTACH_TIMEOUT_MS)
+
         _state.value = SurfaceState.Available(
             surface = surface,
             width = surfaceContainer.width,
@@ -80,13 +139,23 @@ class VideoSurfaceRenderer(
         val newH = visibleArea.height()
         if (newW == surfaceWidth && newH == surfaceHeight) return
 
-        Log.d(TAG, "Visible area changed: $visibleArea")
+        Log.d(
+            TAG,
+            "Visible area changed: $visibleArea => ${newW}x${newH} " +
+                "(prev=${surfaceWidth}x${surfaceHeight}, surface=${describeSurface(activeSurface)})"
+        )
         playerManager.notifyVisibleArea(visibleArea)
-        surfaceWidth = newW
-        surfaceHeight = newH
 
-        // Update player output size to match the new visible area
-        playerManager.setOutputSize(surfaceWidth, surfaceHeight)
+        if (pendingAttachSurface != null) {
+            attachPendingSurface("visible-area", newW, newH)
+        } else {
+            surfaceWidth = newW
+            surfaceHeight = newH
+
+            // Update player output size to match the new visible area
+            playerManager.setOutputSize(surfaceWidth, surfaceHeight)
+            glPipeline.setVisibleArea(surfaceWidth, surfaceHeight)
+        }
 
         lastVideoSize?.let { onVideoSizeChanged(it) }
 
@@ -101,7 +170,7 @@ class VideoSurfaceRenderer(
      * (e.g. no overlapping toasts or temporary UI). Safe zone for HUD overlays.
      */
     override fun onStableAreaChanged(stableArea: Rect) {
-        Log.d(TAG, "Stable area changed: $stableArea")
+        Log.d(TAG, "Stable area changed: $stableArea, surface=${describeSurface(activeSurface)}")
         val current = _state.value
         if (current is SurfaceState.Available) {
             _state.value = current.copy(stableArea = stableArea)
@@ -113,31 +182,48 @@ class VideoSurfaceRenderer(
      * due to a configuration change. MUST detach from ExoPlayer immediately.
      */
     override fun onSurfaceDestroyed(surfaceContainer: SurfaceContainer) {
-        Log.i(TAG, "Surface destroyed")
+        Log.i(
+            TAG,
+            "Surface destroyed, callbackSurface=${describeSurface(surfaceContainer.surface)}, " +
+                "activeSurface=${describeSurface(activeSurface)}"
+        )
+        cancelPendingAttachFallback()
+        pendingAttachSurface = null
+        glPipeline.detach()
         playerManager.clearVideoSurface()
         activeSurface = null
+        rawSurfaceWidth = 0
+        rawSurfaceHeight = 0
+        surfaceWidth = 0
+        surfaceHeight = 0
         _state.value = SurfaceState.Unavailable
     }
 
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** Re-attach the surface to ExoPlayer after a configuration change. */
+    /** Re-attach the surface to the GL pipeline after a configuration change. */
     fun onConfigurationChanged() {
-        activeSurface?.let {
-            Log.d(TAG, "Config changed — re-attaching surface to player")
-            playerManager.setVideoSurface(it)
+        activeSurface?.let { surface ->
+            Log.d(TAG, "Config changed — re-attaching surface to GL pipeline: ${describeSurface(surface)}")
+            glPipeline.attach(surface, surfaceWidth, surfaceHeight) { intermediate ->
+                mainHandler.post { playerManager.setVideoSurface(intermediate) }
+            }
+            lastVideoSize?.let { glPipeline.setVideoSize(it) }
         }
+    }
+
+    fun release() {
+        Log.i(TAG, "Releasing GLVideoPipeline")
+        glPipeline.release()
     }
 
     fun hasSurface(): Boolean = activeSurface != null
 
     fun onVideoSizeChanged(videoSize: MediaPlayerManager.VideoSize) {
         lastVideoSize = videoSize
+        glPipeline.setVideoSize(videoSize)
         if (surfaceWidth <= 0 || surfaceHeight <= 0) return
 
-        // Calculation here is for logging/debugging or future UI overlays.
-        // The actual video rendering is handled by MediaPlayerManager using
-        // Media3 Presentation effects which correctly handle letterboxing/cropping.
         val scaled = AspectRatioCalculator.calculateScaling(
             videoWidth = videoSize.width,
             videoHeight = videoSize.height,
@@ -146,7 +232,12 @@ class VideoSurfaceRenderer(
             containerWidth = surfaceWidth,
             containerHeight = surfaceHeight
         )
-        Log.d(TAG, "Video aspect ratio update: ${videoSize.width}x${videoSize.height} -> scaled to match car display")
+        Log.d(
+            TAG,
+            "Video aspect ratio update: ${videoSize.width}x${videoSize.height} -> " +
+                "container=${surfaceWidth}x${surfaceHeight}, scaled=${scaled.targetWidth}x${scaled.targetHeight}, " +
+                "surface=${describeSurface(activeSurface)}"
+        )
     }
 
     // ─────────────────────────────────────────────────────────────────────────
