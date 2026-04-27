@@ -118,6 +118,10 @@
 
 **Risk:** Car App Library navigation model may differ from standard Android; verify with real device
 
+**Plans:** 1/2 plans executed
+- [x] 04-01-PLAN.md — BrowseScreen scroll-index tracking (initialScrollIndex param, lastClickedIndex field)
+- [ ] 04-02-PLAN.md — Remove dead NavigationStack, document back-navigation contract
+
 ---
 
 ## Phase 5: Playback Resume Infrastructure
