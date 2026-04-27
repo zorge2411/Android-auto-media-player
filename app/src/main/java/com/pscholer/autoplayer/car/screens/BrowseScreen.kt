@@ -57,10 +57,13 @@ import kotlinx.coroutines.withContext
 class BrowseScreen(
     carContext: CarContext,
     private val source: MediaSource,
-    private val parentId: String?
+    private val parentId: String?,
+    private val initialScrollIndex: Int = 0
 ) : Screen(carContext) {
 
     private var items: List<MediaItem> = emptyList()
+    // per D-05/D-10: track last-clicked index for scroll-state metadata
+    private var lastClickedIndex: Int = initialScrollIndex
     private val thumbnails = ConcurrentHashMap<String, Bitmap>()
     private var isLoading = true
     private var needsPermission = false
@@ -162,7 +165,7 @@ class BrowseScreen(
             listBuilder.setNoItemsMessage(errorMessage ?: "No media found")
         } else {
             // AA limits grid to 6 items while driving; more when parked
-            items.forEach { item -> listBuilder.addItem(buildGridItem(item)) }
+            items.forEachIndexed { index, item -> listBuilder.addItem(buildGridItem(item, index)) }
         }
 
         return GridTemplate.Builder()
@@ -172,7 +175,7 @@ class BrowseScreen(
             .build()
     }
 
-    private fun buildGridItem(item: MediaItem): GridItem {
+    private fun buildGridItem(item: MediaItem, index: Int): GridItem {
         val builder = GridItem.Builder().setTitle(item.title)
         item.subtitle?.let { builder.setText(it) }
 
@@ -188,8 +191,9 @@ class BrowseScreen(
         builder.setImage(icon, GridItem.IMAGE_TYPE_LARGE)
 
         builder.setOnClickListener {
+            lastClickedIndex = index
             if (item.isFolder) {
-                screenManager.push(BrowseScreen(carContext, source, item.id))
+                screenManager.push(BrowseScreen(carContext, source, item.id, 0))
             } else {
                 screenManager.push(VideoPlaybackScreen(carContext, item))
             }
