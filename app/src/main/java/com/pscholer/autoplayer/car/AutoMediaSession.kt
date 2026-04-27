@@ -11,7 +11,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.pscholer.autoplayer.car.screens.RootScreen
 import com.pscholer.autoplayer.car.surface.VideoSurfaceRenderer
 import com.pscholer.autoplayer.di.AppEntryPoint
-import com.pscholer.autoplayer.util.NavigationStack
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 class AutoMediaSession : Session() {
 
     private lateinit var surfaceRenderer: VideoSurfaceRenderer
-    val navigationStack = NavigationStack()
 
     override fun onCreateScreen(intent: Intent): Screen {
         val entryPoint = EntryPointAccessors.fromApplication(
