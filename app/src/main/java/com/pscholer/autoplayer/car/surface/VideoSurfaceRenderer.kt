@@ -73,7 +73,10 @@ class VideoSurfaceRenderer(
                 "surface=${describeSurface(surface)}"
         )
         playerManager.setOutputSize(width, height)
-        glPipeline.attach(surface, width, height) { intermediateSurface ->
+        // GL pipeline always renders to the full EGL surface so the viewport covers the entire
+        // display and FIT-mode bars are centered. The visible-area (width×height) is only used
+        // for decoder output sizing above; the raw surface covers the whole screen.
+        glPipeline.attach(surface, rawSurfaceWidth, rawSurfaceHeight) { intermediateSurface ->
             // Hand the SurfaceTexture-backed intermediate Surface to ExoPlayer (NOT the Car App Surface)
             mainHandler.post { playerManager.setVideoSurface(intermediateSurface) }
         }
@@ -154,7 +157,7 @@ class VideoSurfaceRenderer(
 
             // Update player output size to match the new visible area
             playerManager.setOutputSize(surfaceWidth, surfaceHeight)
-            glPipeline.setVisibleArea(surfaceWidth, surfaceHeight)
+            // Pipeline uses full raw surface for viewport — no setVisibleArea needed
         }
 
         lastVideoSize?.let { onVideoSizeChanged(it) }
@@ -205,7 +208,7 @@ class VideoSurfaceRenderer(
     fun onConfigurationChanged() {
         activeSurface?.let { surface ->
             Log.d(TAG, "Config changed — re-attaching surface to GL pipeline: ${describeSurface(surface)}")
-            glPipeline.attach(surface, surfaceWidth, surfaceHeight) { intermediate ->
+            glPipeline.attach(surface, rawSurfaceWidth, rawSurfaceHeight) { intermediate ->
                 mainHandler.post { playerManager.setVideoSurface(intermediate) }
             }
             lastVideoSize?.let { glPipeline.setVideoSize(it) }
