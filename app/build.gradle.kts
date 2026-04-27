@@ -104,4 +104,8 @@ dependencies {
 
     // ─── Image loading (thumbnails / posters) ────────────────────────────────
     implementation("io.coil-kt:coil:2.6.0")
+
+    // ─── Testing ─────────────────────────────────────────────────────────────
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.0.0")
 }
