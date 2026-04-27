@@ -14,7 +14,6 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
-import androidx.media3.effect.Presentation
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
@@ -46,7 +45,21 @@ class MediaPlayerManager @Inject constructor(
     companion object {
         private const val TAG = "MediaPlayerManager"
         private const val PLAYBACK_SAVE_INTERVAL_MS = 10_000L
+        // Media3 Presentation effects were removed in Phase 3 Wave 0 — empirically broken
+        // on Android Auto's remote Surface (setFrameRate -38 errno in DefaultVideoFrameProcessor).
+        // Replaced by GLVideoPipeline (custom EGL14 + OES intermediary). See 3-RESEARCH.md.
+
+        // Any ERROR_CODE_TIMEOUT within this window of a surface teardown is non-fatal and
+        // suppressed. ExoPlayer recovers automatically after the timeout completes.
+        private const val TEARDOWN_TIMEOUT_WINDOW_MS = 4_000L
     }
+
+    // Timestamp of the last surface teardown call. Used to identify non-fatal timeout errors
+    // that fire when the Qualcomm codec cleanup blocks the playback thread for ~2s after a
+    // natural video end.
+    private var lastSurfaceTeardownMs = 0L
+
+    private var playSequence = 0
 
     private val managerScope = CoroutineScope(Dispatchers.Main)
     private var currentMediaId: String? = null
@@ -91,6 +104,7 @@ class MediaPlayerManager @Inject constructor(
     // When play() is called before a Surface is available we store the intent here and
     // execute it the moment setVideoSurface() delivers a real surface from onSurfaceAvailable.
     private var pendingPlay: PendingPlay? = null
+    private var pendingSurface: Surface? = null
 
     private val _scalingMode = MutableStateFlow(ScalingMode.FIT)
     val scalingMode: StateFlow<ScalingMode> = _scalingMode.asStateFlow()
@@ -98,6 +112,26 @@ class MediaPlayerManager @Inject constructor(
     private sealed class PendingPlay {
         data class Item(val item: androidx.media3.common.MediaItem) : PendingPlay()
         data class Source(val source: androidx.media3.exoplayer.source.MediaSource) : PendingPlay()
+    }
+
+    private fun describeSurface(surface: Surface?): String {
+        if (surface == null) return "null"
+        return "Surface@${System.identityHashCode(surface).toString(16)}(valid=${surface.isValid})"
+    }
+
+    private fun describePendingPlay(pendingPlay: PendingPlay?): String = when (pendingPlay) {
+        null -> "none"
+        is PendingPlay.Item -> "item"
+        is PendingPlay.Source -> "source"
+    }
+
+    private fun logPipelineSnapshot(prefix: String) {
+        Log.d(
+            TAG,
+            "$prefix | playerState=${player.playbackState} activeSurface=${describeSurface(activeSurface)} " +
+                "pendingSurface=${describeSurface(pendingSurface)} pendingPlay=${describePendingPlay(pendingPlay)} " +
+                "outputSize=${surfaceWidth}x${surfaceHeight} visibleArea=$visibleArea"
+        )
     }
 
     // Short playback/rebuffer thresholds let video start quickly on car head units;
@@ -124,16 +158,22 @@ class MediaPlayerManager @Inject constructor(
         .setHandleAudioBecomingNoisy(true)
         .build()
         .also { exo ->
-            // videoScalingMode is ignored for raw Surfaces (CarAppService gives us one);
-            // aspect-ratio fit is enforced via setVideoEffects(Presentation) in setOutputSize().
             exo.addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(playing: Boolean) {
                     _isPlaying.value = playing
                 }
 
                 override fun onPlaybackStateChanged(state: Int) {
+                    logPipelineSnapshot("onPlaybackStateChanged(state=$state)")
                     _playbackState.value = when (state) {
-                        Player.STATE_IDLE     -> PlaybackState.Idle
+                        Player.STATE_IDLE     -> {
+                            pendingSurface?.let { surface ->
+                                Log.d(TAG, "Player is now idle. Attaching pending surface.")
+                                pendingSurface = null
+                                setVideoSurface(surface) // Re-enter to take the idle path
+                            }
+                            PlaybackState.Idle
+                        }
                         Player.STATE_BUFFERING -> PlaybackState.Buffering
                         Player.STATE_READY    -> PlaybackState.Ready
                         Player.STATE_ENDED    -> PlaybackState.Ended
@@ -147,6 +187,22 @@ class MediaPlayerManager @Inject constructor(
                 }
 
                 override fun onPlayerError(error: PlaybackException) {
+                    // Suppress the ExoTimeoutException that fires when Qualcomm's
+                    // c2.qti.avc.decoder cleanup blocks the playback thread for ~2s
+                    // after a natural video end. clearVideoSurface() calls
+                    // player.clearVideoSurface() during this window → timeout, but
+                    // ExoPlayer recovers automatically and the next play works fine.
+                    val msSinceTeardown = System.currentTimeMillis() - lastSurfaceTeardownMs
+                    if (error.errorCode == PlaybackException.ERROR_CODE_TIMEOUT
+                        && msSinceTeardown < TEARDOWN_TIMEOUT_WINDOW_MS
+                    ) {
+                        Log.w(
+                            TAG,
+                            "Surface teardown timeout suppressed (${msSinceTeardown}ms after teardown, " +
+                                "Qualcomm codec cleanup) — playback will recover automatically"
+                        )
+                        return
+                    }
                     Log.e(TAG, "Playback error [${error.errorCode}]: ${error.message}", error)
                     _playbackState.value = PlaybackState.Error(
                         error.message ?: "Unknown playback error",
@@ -156,6 +212,12 @@ class MediaPlayerManager @Inject constructor(
 
                 @Suppress("DEPRECATION")
                 override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
+                    Log.d(
+                        TAG,
+                        "onVideoSizeChanged raw=${videoSize.width}x${videoSize.height} " +
+                            "par=${videoSize.pixelWidthHeightRatio} rot=${videoSize.unappliedRotationDegrees} " +
+                            "outputSize=${surfaceWidth}x${surfaceHeight} activeSurface=${describeSurface(activeSurface)}"
+                    )
                     _videoSize.value = VideoSize(
                         width = videoSize.width,
                         height = videoSize.height,
@@ -193,37 +255,38 @@ class MediaPlayerManager @Inject constructor(
      * no active renderer to race against, and the surface detach completes instantly.
      */
     fun setVideoSurface(surface: Surface) {
-        // Guard 1: duplicate callback with the same Surface instance (common in Android Auto
+        Log.d(
+            TAG,
+            "setVideoSurface requested surface=${describeSurface(surface)} " +
+                "currentActive=${describeSurface(activeSurface)} playerState=${player.playbackState} " +
+                "outputSize=${surfaceWidth}x${surfaceHeight} pendingPlay=${describePendingPlay(pendingPlay)}"
+        )
+
+        // Guard: duplicate callback with the same Surface instance (common in Android Auto
         // when visible-area changes trigger a re-deliver of the same surface).
-        if (activeSurface == surface && pendingPlay == null) {
+        if (activeSurface == surface) {
             Log.d(TAG, "Surface already attached — ignoring duplicate setVideoSurface")
             return
         }
 
-        // Guard 2: if we are replacing a live surface while the renderer is active, stop first.
-        // In normal lifecycle onSurfaceDestroyed calls clearVideoSurface() which stops and nulls
-        // activeSurface before a new surface arrives. If the host breaks that invariant,
-        // detaching an active renderer surface causes ExoTimeoutException.
-        if (activeSurface != null && activeSurface != surface &&
-            player.playbackState != Player.STATE_IDLE) {
-            Log.w(TAG, "Replacing active surface while player is active — stopping first")
+        // If player is not idle, store the surface and stop the player first.
+        // The onPlaybackStateChanged listener will re-call this function once IDLE.
+        if (player.playbackState != Player.STATE_IDLE) {
+            Log.w(TAG, "Player is not idle (state=${player.playbackState}). Stopping and deferring surface attach.")
+            pendingSurface = surface
             player.stop()
+            return
         }
 
+        // Player is IDLE — safe to attach the surface without racing the renderer.
         Log.d(TAG, "Attaching video surface (player state=${player.playbackState})")
         activeSurface = surface
 
-        // Apply effects BEFORE attaching surface. Our logs show that when setVideoEffects()
-        // is called after setVideoSurface() the FinalShaderWrapper never receives the output
-        // surface on Qualcomm Automotive decoders and drops every frame. Creating the effects
-        // pipeline first and then delivering the surface appears to initialise the wrapper
-        // correctly.
-        applyPresentationEffect()
         player.setVideoSurface(surface)
+        logPipelineSnapshot("setVideoSurface completed")
 
-        // If a play() call arrived before the surface was ready, execute it now.
-        // The player is in IDLE state (stop() was called before prepare() was deferred),
-        // so setVideoSurface() + prepare() here cannot race with an active renderer.
+        // If a play() call was deferred (surface wasn't available when play was requested),
+        // execute it now that both surface and IDLE state are guaranteed.
         val deferred = pendingPlay ?: return
         pendingPlay = null
         Log.d(TAG, "Executing deferred prepare now that surface is available")
@@ -238,33 +301,21 @@ class MediaPlayerManager @Inject constructor(
      * Called from VideoSurfaceRenderer.onSurfaceDestroyed — the car host is about to
      * destroy the surface, so we must stop rendering immediately.
      *
-     * WHY we do NOT call player.clearVideoSurface() here:
-     * clearVideoSurface() is a BLOCKING call — it sends a synchronous message to
-     * ExoPlayer's playback thread and awaits a reply within a fixed timeout.
-     * player.stop() is fire-and-forget (posts to the playback thread, returns at once).
-     * Because stop() returns before the playback thread processes it, calling
-     * clearVideoSurface() right after still races against an active renderer → timeout:
-     *   ExoTimeoutException: Detaching surface timed out.
-     *
-     * The correct approach for Android Auto:
-     *  - Call player.stop() — ExoPlayer transitions to IDLE asynchronously; all rendering
-     *    ceases. The playback thread will discover the surface is gone on its own.
-     *  - Null activeSurface so no future play() accidentally re-attaches a dead surface.
-     *  - The car host destroys the actual Surface AFTER this callback returns, so there
-     *    is no window where ExoPlayer could write to an already-freed buffer.
-     *  - When onSurfaceAvailable fires for a new session, setVideoSurface(newSurface) +
-     *    prepare() rebuild the pipeline from scratch.
+     * Calls `player.stop()` to release the codec; the Qualcomm 2s cleanup hang is handled
+     * by `lastSurfaceTeardownMs` suppression in `onPlayerError`. The next `setVideoSurface()`
+     * call will attach a new surface from IDLE.
      */
     fun clearVideoSurface() {
-        Log.d(TAG, "Surface destroyed — stopping player (no blocking clearVideoSurface)")
-        pendingPlay = null   // discard any deferred prepare — the surface is gone
+        Log.d(TAG, "Surface destroyed — stopping player")
+        logPipelineSnapshot("clearVideoSurface start")
+        pendingPlay = null    // discard any deferred prepare — the surface is gone
+        pendingSurface = null // discard any deferred surface — it's about to be destroyed
+        // Record timestamp so onPlayerError can suppress the ~2s timeout that fires when
+        // Qualcomm codec cleanup is already running (natural-video-end case).
+        lastSurfaceTeardownMs = System.currentTimeMillis()
         player.stop()
         activeSurface = null
-        // surfaceWidth/surfaceHeight are intentionally NOT cleared here.
-        // When a new surface becomes available (onSurfaceAvailable), setOutputSize() will be
-        // called with the new dimensions — which may be the same or different from before.
-        // Preserving the old dimensions means applyPresentationEffect() in play() can still
-        // use them if called before the new onSurfaceAvailable fires.
+        logPipelineSnapshot("clearVideoSurface done")
     }
 
     /** Notify of the visible screen area (can be used for layout adjustments). */
@@ -281,62 +332,21 @@ class MediaPlayerManager @Inject constructor(
 
     fun setOutputSize(width: Int, height: Int) {
         if (width <= 0 || height <= 0) return
+        val oldWidth = surfaceWidth
+        val oldHeight = surfaceHeight
         surfaceWidth = width
         surfaceHeight = height
-
-        // NOTE: We intentionally do NOT call applyPresentationEffect() here.
-        // Calling setVideoEffects() while the player is idle but no surface is attached yet
-        // (possible because onSurfaceAvailable calls setOutputSize before setVideoSurface)
-        // can leave FinalShaderWrapper without an output surface on some decoders.
-        // Effects are applied explicitly in setVideoSurface() and playMediaItem() where we
-        // know the surface (or imminent surface attachment) is present.
+        Log.d(
+            TAG,
+            "setOutputSize ${oldWidth}x${oldHeight} -> ${surfaceWidth}x${surfaceHeight} " +
+                "activeSurface=${describeSurface(activeSurface)} playerState=${player.playbackState}"
+        )
     }
 
-    /** Set the scaling mode. Soft-restarts the player if playback is active. */
     fun setScalingMode(mode: ScalingMode) {
         if (_scalingMode.value == mode) return
         _scalingMode.value = mode
-        
-        if (player.playbackState == androidx.media3.common.Player.STATE_IDLE) {
-            applyPresentationEffect()
-        } else {
-            // Player is active. Changing effects mid-stream wedges the hardware decoder.
-            // Soft-restart the pipeline to safely apply the new scaling mode.
-            val wasPlaying = player.isPlaying
-            val pos = player.currentPosition
-            
-            // Capture what's playing (we could use player.currentMediaItem, but
-            // re-routing through our internal play state is cleaner for our architecture).
-            val oldItem = player.currentMediaItem
-            
-            Log.i(TAG, "Soft-restarting player to apply new scaling mode: $mode")
-            player.stop() // guarantees transition to IDLE
-            applyPresentationEffect()
-            
-            oldItem?.let {
-                player.setMediaItem(it)
-                player.prepare()
-                player.seekTo(pos)
-                player.playWhenReady = wasPlaying
-            }
-        }
-    }
-
-    private fun applyPresentationEffect() {
-        val w = surfaceWidth
-        val h = surfaceHeight
-        if (w <= 0 || h <= 0) return
-
-        val layoutMode = when (_scalingMode.value) {
-            ScalingMode.FIT     -> Presentation.LAYOUT_SCALE_TO_FIT
-            ScalingMode.FILL    -> Presentation.LAYOUT_SCALE_TO_FIT_WITH_CROP
-            ScalingMode.STRETCH -> Presentation.LAYOUT_STRETCH_TO_FIT
-        }
-
-        Log.d(TAG, "Applying Presentation effect: ${w}x${h}, mode: ${_scalingMode.value}")
-        player.setVideoEffects(
-            listOf(Presentation.createForWidthAndHeight(w, h, layoutMode))
-        )
+        Log.i(TAG, "Scaling mode set to $mode (no-op until Wave 3 GLVideoPipeline wires it)")
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -369,7 +379,11 @@ class MediaPlayerManager @Inject constructor(
         val mediaSource = DefaultMediaSourceFactory(dataSourceFactory)
             .createMediaSource(MediaItem.fromUri(uri))
 
-        Log.i(TAG, "Starting playback with headers: $uri")
+        val seq = ++playSequence
+        Log.i(TAG, "=== PLAY #$seq (headers) === $uri")
+        Log.i(TAG, "  activeSurface=${describeSurface(activeSurface)} valid=${activeSurface?.isValid}")
+        Log.i(TAG, "  pendingPlay=${describePendingPlay(pendingPlay)} pendingSurface=${describeSurface(pendingSurface)}")
+        Log.i(TAG, "  playerState=${player.playbackState} surfaceSize=${surfaceWidth}x${surfaceHeight}")
         _currentItem.value = NowPlaying(uri.toString(), title)
 
         // Reset to IDLE before preparing a new item. If the player is in ERROR state (e.g.
@@ -390,13 +404,17 @@ class MediaPlayerManager @Inject constructor(
             return
         }
 
-        // Re-apply Presentation effects BEFORE attaching surface so the effects pipeline is
-        // created before the surface arrives. This matches the order in setVideoSurface().
-        applyPresentationEffect()
-
         // Re-attach surface BEFORE prepare(). This is safe here because activeSurface is non-null
         // and the player is in IDLE (stop() above), so no renderer is active to race against.
-        player.setVideoSurface(activeSurface!!)
+        val surface = activeSurface
+        if (surface == null || !surface.isValid) {
+            Log.e(TAG, "DIAGNOSTIC #$seq: activeSurface is ${if (surface == null) "null" else "invalid"} — forcing deferred path")
+            activeSurface = null
+            pendingPlay = PendingPlay.Source(mediaSource)
+            startPeriodicSave(mediaId ?: uri.toString(), source)
+            return
+        }
+        player.setVideoSurface(surface)
 
         player.apply {
             setMediaSource(mediaSource)
@@ -409,7 +427,12 @@ class MediaPlayerManager @Inject constructor(
     }
 
     private fun playMediaItem(mediaItem: MediaItem, title: String, source: String = "LOCAL", mediaId: String) {
-        Log.i(TAG, "Starting playback: ${mediaItem.localConfiguration?.uri}")
+        val seq = ++playSequence
+        Log.i(TAG, "=== PLAY #$seq === ${mediaItem.localConfiguration?.uri}")
+        Log.i(TAG, "  activeSurface=${describeSurface(activeSurface)} valid=${activeSurface?.isValid}")
+        Log.i(TAG, "  pendingPlay=${describePendingPlay(pendingPlay)} pendingSurface=${describeSurface(pendingSurface)}")
+        Log.i(TAG, "  playerState=${player.playbackState} surfaceSize=${surfaceWidth}x${surfaceHeight}")
+        logPipelineSnapshot("playMediaItem entry")
         _currentItem.value = NowPlaying(
             mediaItem.localConfiguration?.uri?.toString() ?: "",
             title
@@ -433,13 +456,17 @@ class MediaPlayerManager @Inject constructor(
             return
         }
 
-        // Re-apply Presentation effects BEFORE attaching surface so the effects pipeline is
-        // created before the surface arrives. This matches the order in setVideoSurface().
-        applyPresentationEffect()
-
         // Re-attach surface BEFORE prepare(). This is safe here because activeSurface is non-null
         // and the player is in IDLE (stop() above), so no renderer is active to race against.
-        player.setVideoSurface(activeSurface!!)
+        val surface = activeSurface
+        if (surface == null || !surface.isValid) {
+            Log.e(TAG, "DIAGNOSTIC #$seq: activeSurface is ${if (surface == null) "null" else "invalid"} — forcing deferred path")
+            activeSurface = null
+            pendingPlay = PendingPlay.Item(mediaItem)
+            startPeriodicSave(mediaId, source)
+            return
+        }
+        player.setVideoSurface(surface)
 
         player.apply {
             setMediaItem(mediaItem)
