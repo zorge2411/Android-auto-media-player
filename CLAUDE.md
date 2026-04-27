@@ -109,6 +109,24 @@ MediaRepository (injected into AutoMediaSession)
 4. **Hilt EntryPoint pattern** — Car App Screens don't use @AndroidEntryPoint; use AppEntryPoint.entryPoint() to inject dependencies
 5. **Foreground service** — media playback runs as ForegroundService (mediaPlayback type) to prevent OS termination
 
+## Back Navigation Contract (Phase 4)
+
+The Smart Back Button feature relies entirely on the Car App Library's native screen stack — no custom back-handling code exists. Three mechanisms cooperate:
+
+1. **Hardware back / Action.BACK on BrowseScreen**: pops to RootScreen. BrowseScreen's `Header.setStartHeaderAction(Action.BACK)` triggers `screenManager.pop()` automatically.
+
+2. **Hardware back / Action.BACK on VideoPlaybackScreen**: pops to BrowseScreen AND stops playback. The screen registers a `DefaultLifecycleObserver` whose `onStop()` calls `playerManager.stop()`. The Car App Library lifecycle guarantees `ON_STOP` fires when the screen is popped, so no explicit back-press handler is needed.
+
+3. **Stop button (mapStrip on VideoPlaybackScreen)**: explicit `playerManager.stop()` + `screenManager.pop()`. Pops ONE level (to Browse, not Root).
+
+**Scroll state**: BrowseScreen accepts `initialScrollIndex: Int = 0` as a constructor parameter and tracks the last-clicked item in a `lastClickedIndex` field. When the user pops back to BrowseScreen, the host re-invokes `onGetTemplate()` automatically; `lastClickedIndex` survives because the screen instance is preserved on the back stack. NOTE: GridTemplate in Car App Library 1.7.0 has no scroll-to-index API, so visual scroll restoration is best-effort — the index is stored for future use when SectionedItemTemplate (1.8.0+) becomes the stable choice.
+
+**Forbidden patterns** (will break the contract):
+- Do NOT add an `OnBackPressedCallback` — overrides the default pop and tangles with the lifecycle observer.
+- Do NOT call `screenManager.pop()` inside `onStop()` — re-entrant double-pop corrupts the stack.
+- Do NOT call `ItemList.Builder.setSelectedIndex()` on click-to-navigate grids — only works on selectable lists with `OnSelectedListener`; silently ignored otherwise.
+- Do NOT introduce a parallel navigation stack data structure (`NavigationStack` was removed in Phase 4 for this reason). `screenManager` is the single source of truth.
+
 ## Testing
 
 No test suite currently exists. When adding tests:
