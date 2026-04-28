@@ -47,6 +47,14 @@
     <string name="permission_skip">Not now</string>
     <string name="permission_denied">Permission denied — only added folders will be visible</string>
 
+    <!-- Debug: Last AA Connection -->
+    <string name="aa_debug_section">Last AA Connection</string>
+    <string name="aa_debug_subtitle">Recorded when a head unit connects</string>
+    <string name="aa_never_connected">Never connected</string>
+    <string name="aa_host_package_label">Host</string>
+    <string name="aa_car_api_level_label">Car API level</string>
+    <string name="aa_connected_at_label">Connected</string>
+
     <!-- Misc -->
     <string name="folder_added">Folder added</string>
     <string name="folder_removed">Folder removed</string>

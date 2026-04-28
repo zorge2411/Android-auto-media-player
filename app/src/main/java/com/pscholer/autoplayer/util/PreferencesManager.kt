@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -125,8 +126,40 @@ class PreferencesManager @Inject constructor(
         }
     }
 
+    // ── Last AA Connection ────────────────────────────────────────────────────
+    private object LastConnection {
+        val HOST_PACKAGE  = stringPreferencesKey("aa_host_package")
+        val HOST_VERSION  = stringPreferencesKey("aa_host_version")
+        val CAR_API_LEVEL = intPreferencesKey("aa_car_api_level")
+        val CONNECTED_AT  = stringPreferencesKey("aa_connected_at")
+    }
+
+    val lastConnectionFlow: Flow<ConnectionInfo> = context.dataStore.data.map { p ->
+        ConnectionInfo(
+            hostPackage  = p[LastConnection.HOST_PACKAGE]  ?: "",
+            hostVersion  = p[LastConnection.HOST_VERSION]  ?: "",
+            carApiLevel  = p[LastConnection.CAR_API_LEVEL] ?: 0,
+            connectedAt  = p[LastConnection.CONNECTED_AT]  ?: ""
+        )
+    }
+
+    suspend fun saveConnectionInfo(hostPackage: String, hostVersion: String, carApiLevel: Int) {
+        context.dataStore.edit { p ->
+            p[LastConnection.HOST_PACKAGE]  = hostPackage
+            p[LastConnection.HOST_VERSION]  = hostVersion
+            p[LastConnection.CAR_API_LEVEL] = carApiLevel
+            p[LastConnection.CONNECTED_AT]  = java.time.Instant.now().toString()
+        }
+    }
+
     // ── Data classes ──────────────────────────────────────────────────────────
     data class PlexConfig(val serverUrl: String, val token: String)
     data class JellyfinConfig(val serverUrl: String, val username: String, val password: String)
     data class JellyfinSession(val userId: String, val token: String)
+    data class ConnectionInfo(
+        val hostPackage: String,
+        val hostVersion: String,
+        val carApiLevel: Int,
+        val connectedAt: String
+    )
 }

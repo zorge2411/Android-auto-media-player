@@ -67,6 +67,7 @@ class SettingsViewModel @Inject constructor(
     val plexConfigFlow = prefs.plexConfigFlow
     val jellyfinConfigFlow = prefs.jellyfinConfigFlow
     val safUrisFlow = prefs.safUrisFlow
+    val connectionInfoFlow = prefs.lastConnectionFlow
 
     fun savePlex(serverUrl: String, token: String) = viewModelScope.launch {
         prefs.savePlexConfig(serverUrl.trim(), token.trim())
@@ -182,6 +183,7 @@ class SettingsActivity : AppCompatActivity() {
                 launch { vm.safUrisFlow.collect(::renderFolders) }
                 launch { vm.plexSaveState.collect(::renderPlexSaveState) }
                 launch { vm.jellyfinSaveState.collect(::renderJellyfinSaveState) }
+                launch { vm.connectionInfoFlow.collect(::renderConnectionInfo) }
             }
         }
     }
@@ -286,6 +288,21 @@ class SettingsActivity : AppCompatActivity() {
                 vm.consumeJellyfinTransient()
             }
         }
+    }
+
+    private fun renderConnectionInfo(info: PreferencesManager.ConnectionInfo) {
+        if (info.hostPackage.isEmpty()) {
+            binding.tvConnectionNever.visibility = android.view.View.VISIBLE
+            binding.layoutConnectionInfo.visibility = android.view.View.GONE
+            return
+        }
+        binding.tvConnectionNever.visibility = android.view.View.GONE
+        binding.layoutConnectionInfo.visibility = android.view.View.VISIBLE
+        val label = if (info.hostVersion != "unknown") "${info.hostPackage}  (${info.hostVersion})"
+                    else info.hostPackage
+        binding.tvHostPackage.text = label
+        binding.tvCarApiLevel.text = info.carApiLevel.toString()
+        binding.tvConnectedAt.text = info.connectedAt
     }
 
     // ── Click handlers ───────────────────────────────────────────────────────

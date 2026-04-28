@@ -4,6 +4,7 @@ import com.pscholer.autoplayer.data.FavoriteRepository
 import com.pscholer.autoplayer.data.MediaRepository
 import com.pscholer.autoplayer.data.PlaybackRepository
 import com.pscholer.autoplayer.player.MediaPlayerManager
+import com.pscholer.autoplayer.util.PreferencesManager
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -19,4 +20,5 @@ interface AppEntryPoint {
     fun playerManager(): MediaPlayerManager
     fun playbackRepository(): PlaybackRepository
     fun favoriteRepository(): FavoriteRepository
+    fun preferencesManager(): PreferencesManager
 }

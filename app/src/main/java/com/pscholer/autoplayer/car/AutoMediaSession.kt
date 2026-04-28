@@ -28,6 +28,14 @@ class AutoMediaSession : Session() {
         val playerManager = entryPoint.playerManager()
         surfaceRenderer = VideoSurfaceRenderer(carContext, playerManager)
 
+        lifecycleScope.launch {
+            val pkg = carContext.getHostInfo()?.packageName ?: "unknown"
+            val version = runCatching {
+                carContext.packageManager.getPackageInfo(pkg, 0).versionName ?: "unknown"
+            }.getOrDefault("unknown")
+            entryPoint.preferencesManager().saveConnectionInfo(pkg, version, carContext.getCarAppApiLevel())
+        }
+
         // The registered Surface sits behind every template rendered by this session.
         carContext.getCarService(AppManager::class.java)
             .setSurfaceCallback(surfaceRenderer)
