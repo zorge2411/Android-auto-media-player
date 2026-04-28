@@ -48,6 +48,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Required so gearhead:projection can resolve this activity when
+                 the user taps the settings icon for this app in Android Auto. -->
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+            </intent-filter>
         </activity>
 
         <!--
