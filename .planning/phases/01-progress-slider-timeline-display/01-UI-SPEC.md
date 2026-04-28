@@ -114,13 +114,30 @@ Slot order is fixed — Car App Library renders ActionStrip buttons top-to-botto
 
 Note: The stop button currently uses ic_pause. CLAUDE.md TODO captures switching this to a more appropriate stop icon (e.g., ic_stop or ic_close). This is a polish task outside Phase 1 core scope but the icon swap is a one-line change to MapActionStrip slot 2.
 
+### Auto-Hide / Reveal Behavior (User Decision — LOCKED)
+
+Controls (ActionStrip, MapActionStrip) and timeline text (MessageInfo) **disappear after a period of inactivity and reappear on tap**. This is a first-class interaction requirement, not a polish item.
+
+| Property | Value | Notes |
+|----------|-------|-------|
+| Auto-hide timeout | 3 seconds | After last user interaction or initial playback start |
+| Trigger to reveal | Tap anywhere on the video surface | SurfaceCallback touch event (MotionEvent.ACTION_UP on the SurfaceContainer) |
+| Hidden state | NavigationTemplate rendered with `setNavigationInfo(null)` + no ActionStrip + no MapActionStrip | Or equivalent empty-strip approach — exact API to be confirmed in PLAN |
+| Visible state | Full template with ActionStrip + MapActionStrip + MessageInfo timeline | Normal render path |
+| Reveal duration before re-hiding | Resets the 3-second timer on each tap | Tapping again while visible restarts the countdown |
+| Playback state change | Show controls immediately on play/pause toggle; restart 3-second timer | Ensures the user sees confirmation of state change |
+| Real-time position update | Timeline text updates at 1Hz during playback while controls are visible | No update needed while hidden (controls not shown) |
+
+**Implementation approach (to be verified in PLAN):** A `Handler` / `coroutine delay` on the main thread posts a hide action 3 seconds after the last interaction. Touch events on the SurfaceContainer (via `SurfaceCallback.onSurfaceTouched` or `Session.onCarConfigurationChanged` — exact API TBD in research) trigger reveal + timer reset. The `invalidate()` cycle already exists; hide/show is achieved by toggling whether ActionStrip/MessageInfo are included in the built template.
+
 ### Timeline Display (NavigationTemplate.setNavigationInfo)
 
 | State | Display | Notes |
 |-------|---------|-------|
 | Loading / before play | 00:00:00 / 00:00:00 | TimeFormatter returns "00:00:00" for zero ms |
-| During playback | HH:MM:SS / HH:MM:SS | Updates via StateFlow combine; invalidate() throttled to 1Hz |
-| Paused | HH:MM:SS / HH:MM:SS | Position frozen at pause point; duration unchanged |
+| During playback (controls visible) | HH:MM:SS / HH:MM:SS | Updates via StateFlow combine; invalidate() throttled to 1Hz |
+| During playback (controls hidden) | MessageInfo omitted from template | No timeline visible; position still tracked internally |
+| Paused | HH:MM:SS / HH:MM:SS | Controls revealed on pause action; position frozen at pause point |
 | Seeking | HH:MM:SS / HH:MM:SS | Position updates after seek settles via onPositionDiscontinuity |
 
 ### Seek Mechanism (Critical Platform Constraint)
@@ -171,8 +188,9 @@ All components used in Phase 1 are Car App Library model classes — no custom V
 | Position source | MediaPlayerManager.positionMs StateFlow<Long> | Existing |
 | Duration source | MediaPlayerManager.durationMs StateFlow<Long> | Existing |
 | Update trigger | lifecycleScope.launch + combine + invalidate() | Existing — throttled to 1Hz |
-
-**No new components are required for Phase 1.** The implementation was completed in prior sessions (STATE.md confirms "Phase 1: DONE"). This UI-SPEC documents the design contract for the checker and auditor to verify against the already-implemented code.
+| Auto-hide timer | Handler / coroutine delay (3s) | **New** — posts hide action 3s after last interaction |
+| Touch-to-reveal | SurfaceCallback touch handler | **New** — tap on video surface shows controls + resets timer |
+| Controls visibility state | Boolean flag `controlsVisible` in VideoPlaybackScreen | **New** — toggles whether ActionStrip/MessageInfo are included in template build |
 
 ---
 
