@@ -60,7 +60,7 @@ Each source implements the same `getItems(source, parentId)` contract, returning
 
 ### Key Dependencies & Versions
 
-- **Gradle/Kotlin**: AGP 8.7.3, Kotlin 2.0.0, compileSdk 35, minSdk 29
+- **Gradle/Kotlin**: AGP 8.7.3, Kotlin 1.9.24 (plugin in root `build.gradle.kts`; `kotlin-test` follows it), compileSdk 35, minSdk 29
 - **Car App Library**: 1.7.0 (app + app-projected for phone→head unit projection)
 - **Media3/ExoPlayer**: 1.3.1 (playback, HLS/DASH/SmoothStreaming, UI, OkHttp data source)
 - **Networking**: Retrofit 2.11.0, OkHttp 4.12.0

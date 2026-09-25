@@ -98,8 +98,9 @@ Done: `switch-back-icon-from-pause-icon-to-relevant-icon` (Phase 01-02).
 ## Build Notes
 
 - AGP 8.7.3, Gradle 8.10.2 wrapper, compileSdk 35, minSdk 29.
-- ⚠️ Root `build.gradle.kts` declares the Kotlin Android plugin **1.9.24**, but CLAUDE.md says Kotlin 2.0.0 and the app uses `kotlin-test-junit:2.0.0`. Reconcile one or the other.
-- The repo ships only `gradlew.bat` (no Unix `gradlew`). `gradle.properties` pins `org.gradle.java.home` to a Windows JDK path, so builds outside that machine need that line overridden.
+- Kotlin 1.9.24 (root `build.gradle.kts`). `kotlin-test-junit` takes its version from the plugin.
+- The repo ships only `gradlew.bat` (no Unix `gradlew`).
+- The JDK is not pinned in the repo: Android Studio uses its Gradle JDK setting, and the CLI uses `JAVA_HOME` (or `org.gradle.java.home` in `~/.gradle/gradle.properties`).
 - Unit tests: `./gradlew :app:testDebugUnitTest` (AspectRatioCalculatorTest, TimeFormatterTest, ControlsVisibilityControllerTest).
 
 ## Known Limitations

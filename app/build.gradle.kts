@@ -107,6 +107,7 @@ dependencies {
 
     // ─── Testing ─────────────────────────────────────────────────────────────
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.0.0")
+    // Version comes from the Kotlin Gradle plugin (root build.gradle.kts) so it cannot drift
+    testImplementation(kotlin("test-junit"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
 }

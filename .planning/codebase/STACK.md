@@ -5,7 +5,7 @@
 ## Languages
 
 **Primary:**
-- Kotlin 2.0.0 - Primary application language, configured in `build.gradle.kts`
+- Kotlin 1.9.24 - Primary application language, configured in `build.gradle.kts`
 - Java 17 - Compilation target via `jvmTarget` and `sourceCompatibility/targetCompatibility`
 
 **Secondary:**
@@ -86,7 +86,7 @@
 
 **Plugins:**
 - `com.android.application` (8.7.3) - Android app build plugin
-- `org.jetbrains.kotlin.android` (2.0.0) - Kotlin/Android compiler
+- `org.jetbrains.kotlin.android` (1.9.24) - Kotlin/Android compiler
 - `com.google.dagger.hilt.android` (2.51.1) - Hilt dependency injection
 - `kotlin-kapt` - Kotlin annotation processor for Hilt
 - `kotlin-parcelize` - Parcel serialization for Parcelable data classes
