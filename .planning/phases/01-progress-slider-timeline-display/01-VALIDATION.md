@@ -2,7 +2,7 @@
 phase: 1
 slug: progress-slider-timeline-display
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-04-28
 ---
@@ -17,9 +17,9 @@ created: 2026-04-28
 
 | Property | Value |
 |----------|-------|
-| **Framework** | JUnit 4 (Android instrumented) / Espresso |
+| **Framework** | JUnit 4 JVM unit tests (+ kotlinx-coroutines-test, added in 01-02) |
 | **Config file** | app/build.gradle.kts — existing androidTestImplementation deps |
-| **Quick run command** | `./gradlew build` (compiles; no test suite exists yet) |
+| **Quick run command** | `./gradlew :app:testDebugUnitTest` |
 | **Full suite command** | `./gradlew connectedDebugAndroidTest` (requires device) |
 | **Estimated runtime** | ~60 seconds (build only) |
 
@@ -40,10 +40,13 @@ Note: No test suite currently exists (per CLAUDE.md). All verification for Phase
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 1-01-01 | 01 | 1 | auto-hide timer | build | `./gradlew build` | ✅ existing | ⬜ pending |
-| 1-01-02 | 01 | 1 | touch reveal | build | `./gradlew build` | ✅ existing | ⬜ pending |
-| 1-01-03 | 01 | 2 | controls hidden state | build | `./gradlew build` | ✅ existing | ⬜ pending |
-| 1-01-04 | 01 | 2 | real-time timeline | build | `./gradlew build` | ✅ existing | ⬜ pending |
+| 1-01-01 | 01 | 1 | FEAT-1-AC4 formatter | unit | `./gradlew :app:testDebugUnitTest --tests "*TimeFormatterTest*"` | ❌ W0 (created in task) | ⬜ pending |
+| 1-01-02 | 01 | 1 | FEAT-1-AC4 formatter fix | unit | `./gradlew :app:testDebugUnitTest --tests "*TimeFormatterTest*"` | ✅ after 1-01-01 | ⬜ pending |
+| 1-01-03 | 01 | 1 | FEAT-1-AC5 1 Hz ticker | build | `./gradlew :app:assembleDebug` | ✅ existing | ⬜ pending |
+| 1-02-01 | 02 | 1 | auto-hide timer | unit | `./gradlew :app:testDebugUnitTest --tests "*ControlsVisibilityControllerTest*"` | ❌ W0 (created in task) | ⬜ pending |
+| 1-02-02 | 02 | 1 | touch reveal bridge | build | `./gradlew :app:assembleDebug` | ✅ existing | ⬜ pending |
+| 1-02-03 | 02 | 1 | hidden state / screen wiring | build + unit | `./gradlew :app:assembleDebug :app:testDebugUnitTest` | ✅ existing | ⬜ pending |
+| 1-03-01 | 03 | 2 | all (head unit) | manual | see 01-03 matrix | — | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -69,10 +72,10 @@ Existing infrastructure covers all phase requirements. No new test framework ins
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
 - [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
+- [x] No watch-mode flags
 - [ ] Feedback latency < 60s
 - [ ] `nyquist_compliant: true` set in frontmatter
 
