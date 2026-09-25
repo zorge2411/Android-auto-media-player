@@ -54,8 +54,9 @@ class JellyfinRepository @Inject constructor(
         val trimmed = url.trim()
         return when {
             trimmed.startsWith("http://") || trimmed.startsWith("https://") -> trimmed
-            // Local IPs use http; domain names default to https
-            trimmed.matches(Regex("^(192\\.168\\.|10\\.|172\\.(1[6-9]|2[0-9]|3[01])\\.).*")) ->
+            // Bare IPs (LAN, Tailscale 100.x, etc.), localhost and mDNS names use http;
+            // domain names default to https
+            trimmed.matches(Regex("^(\\d{1,3}(\\.\\d{1,3}){3}|localhost|[^/:]+\\.local)([:/].*)?$")) ->
                 "http://$trimmed"
             else -> "https://$trimmed"
         }.trimEnd('/')
