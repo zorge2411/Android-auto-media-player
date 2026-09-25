@@ -15,6 +15,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.pscholer.autoplayer.R
+import com.pscholer.autoplayer.car.ControlsVisibilityController
 import com.pscholer.autoplayer.data.models.MediaItem
 import com.pscholer.autoplayer.data.models.Favorite
 import com.pscholer.autoplayer.di.AppEntryPoint
@@ -35,7 +36,8 @@ import kotlinx.coroutines.launch
  * │  │                                                           │  │
  * │  │  NavigationTemplate overlays minimal controls on top:     │  │
  * │  │    • ActionStrip (right edge): ⏮ ⏯ ⏭ icons              │  │
- * │  │    • MapActionStrip (top-right): ✕ Stop button           │  │
+ * │  │    • MapActionStrip (top-right): [PAN] ♡ Favorite ✕ Stop  │  │
+ * │  │    • MessageInfo: HH:MM:SS / HH:MM:SS timeline            │  │
  * │  │                                                           │  │
  * │  └───────────────────────────────────────────────────────────┘  │
  * └─────────────────────────────────────────────────────────────────┘
@@ -47,6 +49,13 @@ import kotlinx.coroutines.launch
  *
  * The screen calls invalidate() whenever play/pause state changes so the
  * correct icon is displayed on the action strip.
+ *
+ * Auto-hide (Phase 1): the timeline is omitted from the template 3 s after the last user
+ * interaction and returns on a surface touch or any button press. Both ActionStrips are
+ * always set — NavigationTemplate.Builder.build() throws without an ActionStrip, and the host
+ * already conceals the strips when idle. Action.PAN must stay in the map strip: without it
+ * the host delivers no SurfaceCallback touch events. On touchscreens the host does not
+ * display the PAN button.
  */
 class VideoPlaybackScreen(
     carContext: CarContext,
@@ -67,6 +76,9 @@ class VideoPlaybackScreen(
     private var currentDurationMs = 0L
     private var lastFormattedPosition = ""
     private var isFavorite = false
+    private var lastIsPlaying: Boolean? = null
+    private var controlsVisible = true
+    private val controls = ControlsVisibilityController(lifecycleScope)
 
     init {
         // Back-navigation contract (Phase 4 — D-02, D-03):
@@ -79,6 +91,7 @@ class VideoPlaybackScreen(
         // Pitfall 2).
         lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStop(owner: LifecycleOwner) {
+                controls.cancel()
                 playerManager.stop()
             }
         })
@@ -108,10 +121,26 @@ class VideoPlaybackScreen(
                     ?.takeIf { it.isResumable() }
                     ?.let { playerManager.seekTo(it.positionMs) }
             }
+            // Starts the initial 3 s auto-hide countdown
+            controls.onUserInteraction()
+        }
+
+        lifecycleScope.launch {
+            controls.visible.collect { visible ->
+                controlsVisible = visible
+                invalidate()
+            }
+        }
+
+        // Surface touches (tap / drag / fling) reveal the controls and restart the timer
+        lifecycleScope.launch {
+            entryPoint.surfaceTouchEvents().taps.collect { controls.onUserInteraction() }
         }
 
         // Throttle invalidate() to once per second of wall-clock progress — the Car App
         // host IPC is expensive and can cause buffering if we invalidate on every tick.
+        // While the timeline is hidden, position ticks do not invalidate at all; play/pause
+        // changes always do, so the icon is never stale.
         lifecycleScope.launch {
             kotlinx.coroutines.flow.combine(
                 playerManager.isPlaying,
@@ -119,12 +148,15 @@ class VideoPlaybackScreen(
                 playerManager.durationMs
             ) { playing, pos, dur ->
                 Triple(playing, pos, dur)
-            }.collectLatest { (_, pos, dur) ->
+            }.collectLatest { (playing, pos, dur) ->
                 val newTime = TimeFormatter.formatMillis(pos)
-                if (newTime != lastFormattedPosition || currentDurationMs != dur) {
-                    lastFormattedPosition = newTime
-                    currentPositionMs = pos
-                    currentDurationMs = dur
+                val timelineChanged = newTime != lastFormattedPosition || currentDurationMs != dur
+                val playingChanged = playing != lastIsPlaying
+                lastFormattedPosition = newTime
+                lastIsPlaying = playing
+                currentPositionMs = pos
+                currentDurationMs = dur
+                if (playingChanged || (controlsVisible && timelineChanged)) {
                     invalidate()
                 }
             }
@@ -169,6 +201,8 @@ class VideoPlaybackScreen(
 
         // ── Top-right map strip: secondary / navigation controls ──────────────
         val mapStrip = ActionStrip.Builder()
+            // Required for SurfaceCallback touch events (tap-to-reveal); hidden on touchscreens
+            .addAction(Action.PAN)
             .addAction(
                 Action.Builder()
                     .setIcon(
@@ -180,6 +214,7 @@ class VideoPlaybackScreen(
                         ).build()
                     )
                     .setOnClickListener {
+                        controls.onUserInteraction()
                         lifecycleScope.launch {
                             if (isFavorite) {
                                 favoriteRepository.remove(mediaItem.id)
@@ -208,10 +243,11 @@ class VideoPlaybackScreen(
                 Action.Builder()
                     .setIcon(
                         CarIcon.Builder(
-                            IconCompat.createWithResource(carContext, R.drawable.ic_pause)
+                            IconCompat.createWithResource(carContext, R.drawable.ic_close)
                         ).build()
                     )
                     .setOnClickListener {
+                        controls.onUserInteraction()
                         playerManager.stop()
                         screenManager.pop()
                     }
@@ -219,11 +255,15 @@ class VideoPlaybackScreen(
             )
             .build()
 
-        return NavigationTemplate.Builder()
-            .setNavigationInfo(MessageInfo.Builder(timelineText).build())
+        // ActionStrip is mandatory in every state (build() throws without one); hiding the
+        // controls only drops the timeline.
+        val builder = NavigationTemplate.Builder()
             .setActionStrip(playbackStrip)
             .setMapActionStrip(mapStrip)
-            .build()
+        if (controlsVisible) {
+            builder.setNavigationInfo(MessageInfo.Builder(timelineText).build())
+        }
+        return builder.build()
     }
 
     private fun buildAction(iconRes: Int, onClick: () -> Unit): Action =
@@ -233,12 +273,12 @@ class VideoPlaybackScreen(
                     IconCompat.createWithResource(carContext, iconRes)
                 ).build()
             )
-            .setOnClickListener(onClick)
+            .setOnClickListener {
+                controls.onUserInteraction()
+                onClick()
+            }
             .build()
 
-    private fun buildTimelineText(): String {
-        val currentTimeStr = TimeFormatter.formatMillis(currentPositionMs)
-        val totalTimeStr = TimeFormatter.formatMillis(currentDurationMs)
-        return "$currentTimeStr / $totalTimeStr"
-    }
+    private fun buildTimelineText(): String =
+        TimeFormatter.formatTimeline(currentPositionMs, currentDurationMs)
 }

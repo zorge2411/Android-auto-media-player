@@ -1,5 +1,6 @@
 package com.pscholer.autoplayer.di
 
+import com.pscholer.autoplayer.car.surface.SurfaceTouchEvents
 import com.pscholer.autoplayer.data.FavoriteRepository
 import com.pscholer.autoplayer.data.MediaRepository
 import com.pscholer.autoplayer.data.PlaybackRepository
@@ -21,4 +22,5 @@ interface AppEntryPoint {
     fun playbackRepository(): PlaybackRepository
     fun favoriteRepository(): FavoriteRepository
     fun preferencesManager(): PreferencesManager
+    fun surfaceTouchEvents(): SurfaceTouchEvents
 }

@@ -8,6 +8,7 @@ import android.view.Surface
 import androidx.car.app.CarContext
 import androidx.car.app.SurfaceCallback
 import androidx.car.app.SurfaceContainer
+import androidx.car.app.annotations.RequiresCarApi
 import com.pscholer.autoplayer.car.surface.gl.GLVideoPipeline
 import com.pscholer.autoplayer.player.MediaPlayerManager
 import com.pscholer.autoplayer.util.AspectRatioCalculator
@@ -22,7 +23,8 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class VideoSurfaceRenderer(
     private val carContext: CarContext,
-    private val playerManager: MediaPlayerManager
+    private val playerManager: MediaPlayerManager,
+    private val touchEvents: SurfaceTouchEvents
 ) : SurfaceCallback {
 
     companion object {
@@ -200,6 +202,26 @@ class VideoSurfaceRenderer(
         surfaceWidth = 0
         surfaceHeight = 0
         _state.value = SurfaceState.Unavailable
+    }
+
+    // ── Touch input (reveals playback controls; see SurfaceTouchEvents) ───────
+    // Delivered by the host only while the map ActionStrip contains Action.PAN, and not on
+    // every head unit. onClick needs Car API 5; onScroll/onFling are the level-2 fallback.
+
+    @RequiresCarApi(5)
+    override fun onClick(x: Float, y: Float) {
+        Log.v(TAG, "onClick($x, $y)")
+        touchEvents.emit()
+    }
+
+    override fun onScroll(distanceX: Float, distanceY: Float) {
+        Log.v(TAG, "onScroll($distanceX, $distanceY)")
+        touchEvents.emit()
+    }
+
+    override fun onFling(velocityX: Float, velocityY: Float) {
+        Log.v(TAG, "onFling($velocityX, $velocityY)")
+        touchEvents.emit()
     }
 
     // ─────────────────────────────────────────────────────────────────────────

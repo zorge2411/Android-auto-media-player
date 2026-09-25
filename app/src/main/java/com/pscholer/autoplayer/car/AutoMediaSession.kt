@@ -26,7 +26,7 @@ class AutoMediaSession : Session() {
         )
 
         val playerManager = entryPoint.playerManager()
-        surfaceRenderer = VideoSurfaceRenderer(carContext, playerManager)
+        surfaceRenderer = VideoSurfaceRenderer(carContext, playerManager, entryPoint.surfaceTouchEvents())
 
         lifecycleScope.launch {
             val pkg = carContext.getHostInfo()?.packageName ?: "unknown"

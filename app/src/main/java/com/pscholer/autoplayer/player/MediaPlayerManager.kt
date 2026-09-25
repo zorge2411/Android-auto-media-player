@@ -46,6 +46,9 @@ class MediaPlayerManager @Inject constructor(
     companion object {
         private const val TAG = "MediaPlayerManager"
         private const val PLAYBACK_SAVE_INTERVAL_MS = 10_000L
+        // Timeline refresh rate while playing. ExoPlayer has no position callback during steady
+        // playback, so positionMs is polled; VideoPlaybackScreen de-dupes on the formatted second.
+        private const val POSITION_TICK_INTERVAL_MS = 1_000L
         // Media3 Presentation effects were removed in Phase 3 Wave 0 — empirically broken
         // on Android Auto's remote Surface (setFrameRate -38 errno in DefaultVideoFrameProcessor).
         // Replaced by GLVideoPipeline (custom EGL14 + OES intermediary). See 3-RESEARCH.md.
@@ -67,6 +70,7 @@ class MediaPlayerManager @Inject constructor(
     private var currentSource: String? = null
     private var lastSavedPositionMs = -1L
     private var savePositionJob: kotlinx.coroutines.Job? = null
+    private var positionTickJob: kotlinx.coroutines.Job? = null
 
     private val okHttpClient = OkHttpClient.Builder()
         .followRedirects(true)
@@ -162,6 +166,13 @@ class MediaPlayerManager @Inject constructor(
             exo.addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(playing: Boolean) {
                     _isPlaying.value = playing
+                    if (playing) {
+                        startPositionTicker()
+                    } else {
+                        stopPositionTicker()
+                        // Publish the exact paused position (the last tick may be up to 1s stale)
+                        updatePositionAndDuration()
+                    }
                 }
 
                 override fun onPlaybackStateChanged(state: Int) {
@@ -492,6 +503,8 @@ class MediaPlayerManager @Inject constructor(
     fun seekTo(positionMs: Long) = player.seekTo(positionMs)
 
     fun stop() {
+        // Cancel before resetting positionMs so a pending tick cannot overwrite the reset
+        stopPositionTicker()
         player.stop()
         player.clearMediaItems()
         _currentItem.value = null
@@ -503,6 +516,22 @@ class MediaPlayerManager @Inject constructor(
         // surfaceWidth/surfaceHeight are intentionally preserved so that the next play() call
         // can apply Presentation effects before prepare() even when onSurfaceAvailable does
         // not re-fire (the surface persists across VideoPlaybackScreen navigations in a session).
+    }
+
+    private fun startPositionTicker() {
+        positionTickJob?.cancel()
+        positionTickJob = managerScope.launch {
+            while (true) {
+                _positionMs.value = player.currentPosition.coerceAtLeast(0L)
+                _durationMs.value = player.duration.coerceAtLeast(0L)
+                kotlinx.coroutines.delay(POSITION_TICK_INTERVAL_MS)
+            }
+        }
+    }
+
+    private fun stopPositionTicker() {
+        positionTickJob?.cancel()
+        positionTickJob = null
     }
 
     private fun startPeriodicSave(mediaId: String, source: String) {
@@ -533,6 +562,7 @@ class MediaPlayerManager @Inject constructor(
     }
 
     fun release() {
+        stopPositionTicker()
         savePositionJob?.cancel()
         managerScope.cancel()
         player.release()
