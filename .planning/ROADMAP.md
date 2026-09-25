@@ -40,9 +40,9 @@
 
 **Risk:** Car App Library may restrict SeekBar interactivity; fallback to ExoPlayer built-in player UI controls if needed
 
-**Plans:** 0/3 plans complete
-- [ ] 01-01-live-timeline-PLAN.md — 1 Hz position ticker + TimeFormatter fixes/tests (wave 1)
-- [ ] 01-02-auto-hide-controls-PLAN.md — auto-hide timeline, tap/drag reveal (Action.PAN), stop icon → ic_close (wave 1)
+**Plans:** 2/3 plans complete
+- [x] 01-01-live-timeline-PLAN.md — 1 Hz position ticker + TimeFormatter fixes/tests (wave 1)
+- [x] 01-02-auto-hide-controls-PLAN.md — auto-hide timeline, tap/drag reveal (Action.PAN), stop icon → ic_close (wave 1)
 - [ ] 01-03-head-unit-verification-PLAN.md — head-unit UAT matrix (wave 2, manual)
 
 ---

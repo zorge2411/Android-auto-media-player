@@ -40,12 +40,12 @@ Note: No test suite currently exists (per CLAUDE.md). All verification for Phase
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 1-01-01 | 01 | 1 | FEAT-1-AC4 formatter | unit | `./gradlew :app:testDebugUnitTest --tests "*TimeFormatterTest*"` | ❌ W0 (created in task) | ⬜ pending |
-| 1-01-02 | 01 | 1 | FEAT-1-AC4 formatter fix | unit | `./gradlew :app:testDebugUnitTest --tests "*TimeFormatterTest*"` | ✅ after 1-01-01 | ⬜ pending |
-| 1-01-03 | 01 | 1 | FEAT-1-AC5 1 Hz ticker | build | `./gradlew :app:assembleDebug` | ✅ existing | ⬜ pending |
-| 1-02-01 | 02 | 1 | auto-hide timer | unit | `./gradlew :app:testDebugUnitTest --tests "*ControlsVisibilityControllerTest*"` | ❌ W0 (created in task) | ⬜ pending |
-| 1-02-02 | 02 | 1 | touch reveal bridge | build | `./gradlew :app:assembleDebug` | ✅ existing | ⬜ pending |
-| 1-02-03 | 02 | 1 | hidden state / screen wiring | build + unit | `./gradlew :app:assembleDebug :app:testDebugUnitTest` | ✅ existing | ⬜ pending |
+| 1-01-01 | 01 | 1 | FEAT-1-AC4 formatter | unit | `./gradlew :app:testDebugUnitTest --tests "*TimeFormatterTest*"` | ❌ W0 (created in task) | ✅ green (JVM harness) |
+| 1-01-02 | 01 | 1 | FEAT-1-AC4 formatter fix | unit | `./gradlew :app:testDebugUnitTest --tests "*TimeFormatterTest*"` | ✅ after 1-01-01 | ✅ green (JVM harness) |
+| 1-01-03 | 01 | 1 | FEAT-1-AC5 1 Hz ticker | build | `./gradlew :app:assembleDebug` | ✅ existing | ⚠️ written; Android build not run (no SDK in cloud session) |
+| 1-02-01 | 02 | 1 | auto-hide timer | unit | `./gradlew :app:testDebugUnitTest --tests "*ControlsVisibilityControllerTest*"` | ❌ W0 (created in task) | ✅ green (JVM harness) |
+| 1-02-02 | 02 | 1 | touch reveal bridge | build | `./gradlew :app:assembleDebug` | ✅ existing | ⚠️ written; Android build not run (no SDK in cloud session) |
+| 1-02-03 | 02 | 1 | hidden state / screen wiring | build + unit | `./gradlew :app:assembleDebug :app:testDebugUnitTest` | ✅ existing | ⚠️ written; Android build not run (no SDK in cloud session) |
 | 1-03-01 | 03 | 2 | all (head unit) | manual | see 01-03 matrix | — | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
