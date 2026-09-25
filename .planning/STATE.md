@@ -25,7 +25,7 @@ progress:
 
 | Phase | Feature | Plans | Code | Verification | Status |
 |-------|---------|-------|------|--------------|--------|
-| 01 | Progress slider & timeline | 2/3 | ✅ 01-01, 01-02 | 14 JVM unit tests green; **Android build not yet run**; head-unit UAT pending (01-03) | In progress (PR #1) |
+| 01 | Progress slider & timeline | 2/3 | ✅ 01-01, 01-02 | Android build + 28 unit tests green (2026-09-25); head-unit UAT pending (01-03) | In progress (PR #1) |
 | 02 | Stop other audio | legacy `2-PLAN.md` | Media3 `handleAudioFocus = true` | Not verified on device | Needs GSD re-plan / UAT |
 | 03 | Aspect ratio (GL pipeline) | 6/7 | ✅ 03-01 … 03-06 | 03-07 head-unit verification pending | In progress |
 | 04 | Smart back button | 2/2 | ✅ | `04-HUMAN-UAT.md`: 0/4 tested | Code complete, UAT pending |
@@ -59,15 +59,15 @@ progress:
   - fixed a stale play/pause icon;
   - stop icon changed to `ic_close`.
 
-**Not yet verified:**
-- An Android compile (`./gradlew :app:assembleDebug :app:testDebugUnitTest`). The cloud session could not download the Android SDK.
-- Behaviour on a head unit (plan 01-03).
+**Verified:** `.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest` passes on the dev PC (28/28 unit tests, 2026-09-25).
+
+**Not yet verified:** behaviour on a head unit (plan 01-03).
 
 ---
 
 ## Next Steps
 
-1. **Local build:** run `./gradlew :app:assembleDebug :app:testDebugUnitTest` on the PR branch and report any errors on PR #1.
+1. ~~Local build~~: done 2026-09-25, green.
 2. **One car session covering all pending human verification:**
    - 01-03: 12-row matrix. Record the Car API level from the Settings "Last AA Connection" card; tap-to-reveal needs ≥ 5.
    - 03-07: aspect-ratio matrix (16:9 / 4:3 / 21:9 / 9:16, PLAY #2+).

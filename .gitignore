@@ -23,3 +23,4 @@ Thumbs.db
 # Device logs and personal local files
 *.logcat
 /bil_skaerm.ini
+/.claude/worktrees/

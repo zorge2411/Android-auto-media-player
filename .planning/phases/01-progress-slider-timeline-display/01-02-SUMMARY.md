@@ -29,7 +29,7 @@ commits: [a846dce, 110656e, 7b93d07, f6dcdaa]
   - `ActionStrip.build()` rejects an empty strip.
   - `ACTIONS_CONSTRAINTS_MAP` allows 4 actions and exempts standard actions (PAN) from the icon requirement.
   - The annotation is `androidx.car.app.annotations.RequiresCarApi`.
-- NOT run: an Android compile of the Car App / Hilt code (no SDK in this session). Run `./gradlew :app:assembleDebug :app:testDebugUnitTest` locally.
+- Android build: `.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest` passed on the dev PC on 2026-09-25 (28/28 unit tests).
 
 **Deviations**
 - None functional.

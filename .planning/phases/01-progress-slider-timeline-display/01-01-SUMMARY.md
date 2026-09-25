@@ -15,6 +15,6 @@ commits: [b39f81d, 1aa7488, f06d650]
 
 **Verification**
 - RED → GREEN: 9/9 pass. They were run in a standalone JVM Gradle harness that compiles the real source files, because the cloud session cannot download the Android SDK (`dl.google.com` is blocked by network policy).
-- NOT run: `./gradlew :app:assembleDebug` / `:app:testDebugUnitTest`. Run these locally before Plan 03.
+- Android build: `.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest` passed on the dev PC on 2026-09-25 (28/28 unit tests).
 
 **Deviations:** none.
